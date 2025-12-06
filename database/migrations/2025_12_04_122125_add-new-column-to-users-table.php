@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function(Blueprint $table) {
-            $table->string('google_id');
-            $table->string('avatar');
-            $table->string('nidn');
-            $table->string('public_key');
-            $table->string('private_key_encrypted');
+            $table->string('google_id')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('nidn')->nullable();
+            $table->string('public_key')->nullable();
+            $table->string('private_key_encrypted')->nullable();
         });
     }
 

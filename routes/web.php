@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+
+Route::prefix('/auth/google')->group(function() {
+    Route::get('/', [SocialiteController::class, 'redirect'])->name('auth.google');
+    Route::get('/callback', [SocialiteController::class, 'callback']);
+});
 
 Route::get('/', function () {
     return view('welcome');
