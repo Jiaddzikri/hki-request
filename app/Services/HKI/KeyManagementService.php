@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\HKI;
 
-use App\Request\DecryptPrivateKeyRequest;
-use App\Request\EncryptPrivateKeyRequest;
-use App\Response\DecryptPrivateKeyResponse;
-use App\Response\EncryptPrivateKeyResponse;
-use App\Response\GeneratedKeyPairResponse;
+
+use App\Request\HKI\DecryptPrivateKeyRequest;
+use App\Request\HKI\EncryptPrivateKeyRequest;
+use App\Response\HKI\DecryptPrivateKeyResponse;
+use App\Response\HKI\EncryptPrivateKeyResponse;
+use App\Response\HKI\GeneratedKeyPairResponse;
 use Exception;
 
 class KeyManagementService 
