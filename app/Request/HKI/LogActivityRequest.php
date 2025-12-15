@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Request;
+namespace App\Request\HKI;
 
 use App\Models\User;
 class LogActivityRequest
@@ -11,8 +11,4 @@ class LogActivityRequest
   public ?string $action =null;
   public ?int $modelId = null;
   public ?array $payload = null;
-
-
-
-
 }

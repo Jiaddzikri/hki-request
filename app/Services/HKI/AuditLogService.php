@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\HKI;
 
+use App\Models\HkiAuditLog;
+use App\Request\HKI\DecryptPrivateKeyRequest;
+use App\Request\HKI\LogActivityRequest;
 use App\Models\AuditLog;
-use App\Request\DecryptPrivateKeyRequest;
-use App\Request\LogActivityRequest;
+
 use DB;
 use Exception;
 
@@ -18,7 +20,7 @@ class AuditLogService
   public function logActivity(LogActivityRequest $request)
   {
     return DB::transaction(function () use ($request) {
-      $lastLog = AuditLog::latest('id')->first();
+      $lastLog = HkiAuditLog::latest('id')->first();
 
       $previousHash = $lastLog ? $lastLog->current_hash : str_repeat('0', 64);
 
@@ -44,7 +46,7 @@ class AuditLogService
         throw new Exception("Gagal menandatangani data forensik.");
       }
 
-      return AuditLog::create([
+      return HkiAuditLog::create([
         'user_id' => $request->user->id,
         'model_type' => $request->modelType,
         'model_id' => $request->modelId,
