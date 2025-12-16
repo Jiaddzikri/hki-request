@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class HKIType extends Model
 {
+    protected $table = 'hki_types';
     protected $guarded = [];
 
     public function children()

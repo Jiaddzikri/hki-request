@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HKIProposalMember extends Model
 {
+    protected $table = 'hki_proposal_members';
+    
     protected $guarded = [];
 
     public function user(): BelongsTo
