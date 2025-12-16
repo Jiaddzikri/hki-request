@@ -68,9 +68,7 @@ Route::domain('hki.lppm.com')->middleware(['auth'])->group(function () {
         return "Selamat Datang di Sistem Forensik HKI";
     })->name('hki.dashboard');
 
-    Route::get('/create', function () {
-        return "Form Pengajuan HKI";
-    })->name('hki.create');
+    Route::get('/create', \App\Livewire\Hki\Proposal\Create::class)->name('hki.create');
 
     Route::get('/setup-security', \App\Livewire\Auth\SetupSecurity::class)
         ->name('setup.security');

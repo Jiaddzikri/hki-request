@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class HKIAuditLog extends Model
 {
+    protected $table = 'hki_audit_logs';
+
     protected $guarded = [];
     
     protected $casts = [
