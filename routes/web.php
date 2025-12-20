@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
+use App\Livewire\Hki\Dashboard;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
@@ -64,9 +65,9 @@ Route::domain('lppm.com')->group(function () {
 */
 Route::domain('hki.lppm.com')->middleware(['auth'])->group(function () {
 
-    Route::get('/', function () {
-        return "Selamat Datang di Sistem Forensik HKI";
-    })->name('hki.dashboard');
+    Route::get('/',Dashboard::class)->name('hki.dashboard');
+
+    Route::get('/proposal/{id}', \App\Livewire\Hki\Proposal\Detail::class)->name('hki.show');
 
     Route::get('/create', \App\Livewire\Hki\Proposal\Create::class)->name('hki.create');
 

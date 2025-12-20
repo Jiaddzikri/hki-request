@@ -5,8 +5,11 @@ namespace App\Livewire\Hki\Proposal;
 use App\Helpers\Countries;
 use App\Models\HKIProposal;
 use App\Models\HkiType;
+use App\Models\User;
+use App\Request\HKI\DecryptPrivateKeyRequest;
 use App\Request\HKI\LogActivityRequest;
 use App\Services\HKI\AuditLogService;
+use App\Services\HKI\KeyManagementService;
 use Auth;
 use DB;
 use Livewire\Component;
@@ -149,14 +152,19 @@ class Create extends Component
             'pin' => 'required|digits:6',
         ]);
 
-        if ($this->pin !== '123456') {
-            $this->addError('pin', 'PIN Salah (Dev: Pakai 123456)');
-            return;
-        }
-
         DB::beginTransaction();
 
         try {
+            $user = User::where('id', Auth::id())->select('private_key_encrypted')->first();
+
+            $keyManagementService = new KeyManagementService();
+
+            $decryptRequest = new DecryptPrivateKeyRequest();
+            $decryptRequest->pin = $this->pin;
+            $decryptRequest->encryptedKey = $user->private_key_encrypted;
+
+            $keyManagementService->decryptPrivateKey($decryptRequest);
+
             $proposal = HKIProposal::create([
                 'user_id' => Auth::id(),
                 'hki_type_id' => $this->hki_type_id,
@@ -216,7 +224,11 @@ class Create extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->addError('pin', 'Terjadi Kesalahan Sistem: ' . $e->getMessage());
+            if ($e->getCode() >= 400 && $e->getCode() < 500) {
+                $this->addError('pin', $e->getMessage());
+            } else {
+                $this->addError('server error', 'Terjadi Kesalahan Sistem');
+            }
         }
     }
 }
