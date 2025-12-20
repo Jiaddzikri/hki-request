@@ -2,7 +2,13 @@
 
 namespace App\Livewire\Hki\Proposal;
 
+use App\Helpers\Countries;
+use App\Models\HKIProposal;
 use App\Models\HkiType;
+use App\Request\HKI\LogActivityRequest;
+use App\Services\HKI\AuditLogService;
+use Auth;
+use DB;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
@@ -12,12 +18,17 @@ class Create extends Component
 {
     use WithFileUploads;
     public int $step = 1;
-
+    public $showPinModal = true;
+    public $pin = '';
     public $hki_type_parent_id = '';
     public $hki_type_id = '';
     public $title = '';
     public $abstract = '';
-    public $meta_data = [];
+    public $publication_date;
+    public $publication_city;
+    public $publication_country = "ID";
+    public $url_detail;
+
 
     public $members = [
         ['name' => '', 'nidn' => '', 'npwp' => '', 'nik' => '', 'detail' => '', 'email' => '', 'role' => 'Pencipta Ke 1']
@@ -29,8 +40,12 @@ class Create extends Component
         'pernyataan' => null,
         'contoh_ciptaan' => null,
         'pengalihan' => null,
-        'link_ciptaan' => null,
     ];
+
+    public function getAllCountries(): array
+    {
+        return Countries::countries();
+    }
 
     public function getParentTypesProperty()
     {
@@ -81,6 +96,9 @@ class Create extends Component
                 'hki_type_id' => 'required',
                 'title' => 'required',
                 'abstract' => 'required',
+                'publication_date' => 'required',
+                'publication_country' => 'required',
+                'publication_city' => 'required'
             ]);
         }
 
@@ -109,12 +127,12 @@ class Create extends Component
                 'uploads.pernyataan' => 'required|mimes:pdf|max:10240',
                 'uploads.contoh_ciptaan' => 'required|mimes:pdf|max:10240',
                 'uploads.pengalihan' => 'required|mimes:pdf|max:10240',
-                'uploads.link_ciptaan' => 'required'
+                'url_detail' => 'required'
             ], [
                 'uploads.ktp.required' => 'Scan KTP wajib diupload',
                 'uploads.pernyataan.required' => 'Surat Pernyataan wajib diupload',
-                'uploads.contoh_ciptaan.required' => 'Contoh Ciptaan wajib diupload',
-                'uploads.link_ciptaan.required' => 'Link wajib diisi'
+                'url_detail.required' => 'Contoh Ciptaan wajib diupload',
+
             ]);
         }
     }
@@ -122,5 +140,83 @@ class Create extends Component
     public function render()
     {
         return view('livewire.hki.proposal.create');
+    }
+
+    public function submitProposal(AuditLogService $auditService)
+    {
+
+        $this->validate([
+            'pin' => 'required|digits:6',
+        ]);
+
+        if ($this->pin !== '123456') {
+            $this->addError('pin', 'PIN Salah (Dev: Pakai 123456)');
+            return;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $proposal = HKIProposal::create([
+                'user_id' => Auth::id(),
+                'hki_type_id' => $this->hki_type_id,
+                'title' => $this->title,
+                'description' => $this->abstract,
+                'status' => 'SUBMITTED',
+                'publication_date' => $this->publication_date,
+                'publication_country' => $this->publication_country,
+                'publication_city' => $this->publication_city,
+                'url_detail' => $this->url_detail
+            ]);
+
+            foreach ($this->members as $member) {
+                $proposal->members()->create([
+                    'user_id' => null,
+                    'name' => $member['name'],
+                    'nidn' => $member['nidn'],
+                    'nik' => $member['nik'],
+                    'npwp' => $member['npwp'],
+                    'email' => $member['email'],
+                    'role' => $member['role'],
+                    'detail' => $member['detail'],
+                ]);
+            }
+            foreach ($this->uploads as $type => $file) {
+                if ($file) {
+                    $hash = hash_file('sha256', $file->getRealPath());
+
+                    $path = $file->store('hki-documents/' . $proposal->id, 'public');
+
+                    $proposal->documents()->create([
+                        'name' => strtoupper(str_replace('_', ' ', $type)),
+                        'file_path' => $path,
+                        'file_hash' => $hash,
+                        'mime_type' => $file->getMimeType(),
+                        'file_size' => $file->getSize(),
+                    ]);
+                }
+            }
+
+            $request = new LogActivityRequest();
+            $request->user = Auth::user();
+            $request->action = 'SUBMIT_PROPOSAL';
+            $request->modelType = $proposal;
+            $request->modelId = $proposal->id;
+            $request->payload = $proposal->toArray();
+            $request->pin = $this->pin;
+
+            $auditService->logActivity(
+                $request
+            );
+
+            DB::commit();
+
+            session()->flash('success', 'Proposal Berhasil Diajukan & Ditandatangani Secara Digital!');
+            return redirect()->route('hki.dashboard');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->addError('pin', 'Terjadi Kesalahan Sistem: ' . $e->getMessage());
+        }
     }
 }

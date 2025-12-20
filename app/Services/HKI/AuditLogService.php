@@ -33,7 +33,7 @@ class AuditLogService
 
       $decryptReq = new DecryptPrivateKeyRequest();
       $decryptReq->pin = $request->pin;
-      $decryptReq->privateKeyEncrypted = $request->user->private_key_encrypted;
+      $decryptReq->encryptedKey = $request->user->private_key_encrypted;
 
       $decryptedKey = $this->service->decryptPrivateKey($decryptReq);
       $privateKey = $decryptedKey->decrypted;

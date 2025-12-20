@@ -76,13 +76,8 @@
                             <label for="hki_type_parent" class="block font-medium text-sm text-gray-700">
                                 Kategori HKI <span class="text-red-500">*</span>
                             </label>
-                            <select id="hki_type_parent" wire:model.live="hki_type_parent_id"
-                                class="mt-1 block w-full focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm px-4 py-2 border border-slate-300">
-                                <option value="">Pilih Kategori</option>
-                                @foreach($this->parentTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
+                            <x-select.styled class='py-2 px-4' id="hki_type_parent" wire:model.live="hki_type_parent_id"
+                                :options="$this->parentTypes" select="label:name|value:id" placeholder="Pilih Kategori" />
                             @error('hki_type_parent_id')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -93,14 +88,10 @@
                             <label for="hki_type" class="block font-medium text-sm text-gray-700">
                                 Jenis Spesifik <span class="text-red-500">*</span>
                             </label>
-                            <select id="hki_type" wire:model="hki_type_id"
-                                class="mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm px-4 py-2"
-                                {{ empty($hki_type_parent_id) ? 'disabled' : '' }}>
-                                <option value="">Pilih Jenis</option>
-                                @foreach($this->childTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
+                            <x-select.styled class='py-2 px-4 disabled:bg-slate-100' id="hki_type_parent"
+                                wire:model.live="hki_type_id" :options="$this->childTypes"
+                                :disabled="empty($hki_type_parent_id)" select="label:name|value:id"
+                                placeholder="Pilih Kategori" />
                             @error('hki_type_id')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -112,8 +103,7 @@
                                 Judul Ciptaan/Invensi <span class="text-red-500">*</span>
                             </label>
                             <input type="text" id="title" wire:model="title"
-                                class="px-4 py-2 mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                placeholder="Contoh: Alat Pendeteksi Gempa Berbasis IoT">
+                                class="px-3 py-2 mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                             @error('title')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -125,9 +115,45 @@
                                 Abstrak / Uraian Singkat <span class="text-red-500">*</span>
                             </label>
                             <textarea id="abstract" wire:model="abstract" rows="5"
-                                class="mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm px-4 py-2"
-                                placeholder="Jelaskan secara singkat tentang karya Anda..."></textarea>
+                                class="mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm px-4 py-2"></textarea>
                             @error('abstract')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- publication date -->
+                        <div>
+                            <label for="hki_type_parent" class="block font-medium text-sm text-gray-700">
+                                Tanggal Pertama Kali diumumkan <span class="text-red-500">*</span>
+                            </label>
+                            <x-date time wire:model="meeting_time" wire:model="publication_date" />
+                        </div>
+
+                        <!-- publication country -->
+                        <div>
+                            <label for="hki_type_parent" class="block font-medium text-sm text-gray-700">
+                                Negara Pertama kali diumumkan <span class="text-red-500">*</span>
+                            </label>
+                            <select id="hki_type_parent" wire:model.live="publication_country"
+                                class="mt-1 block w-full focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm px-4 py-2 border border-slate-300">
+                                <option value="">Pilih </option>
+                                @foreach($this->getAllCountries() as $key => $value)
+                                    <option value="{{ $key}}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                            @error('hki_type_parent_id')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- publication city -->
+                        <div>
+                            <label for="title" class="block font-medium text-sm text-gray-700">
+                                Kota pertama kali dipublikasikan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="title" wire:model="publication_city"
+                                class="px-4 py-2 mt-1 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            @error('title')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -216,7 +242,7 @@
                                                     </label>
                                                     <input type="text" wire:model="members.{{ $index }}.nidn"
                                                         class="mt-1 block w-full px-4 py-2 border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
-                                                    @error("members.$index.identifier")
+                                                    @error("members.$index.nidn")
                                                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                                     @enderror
                                                 </div>
@@ -294,13 +320,14 @@
                         <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                             <label class="block text-sm font-bold text-gray-700 mb-2">1. Scan KTP Ketua Pengusul <span
                                     class="text-red-500">*</span></label>
-                            <input type="file" wire:model="uploads.ktp" class="block w-full text-sm text-gray-500
-                                                                              file:mr-4 file:py-2 file:px-4
-                                                                              file:rounded-full file:border-0
-                                                                              file:text-sm file:font-semibold
-                                                                              file:bg-indigo-50 file:text-indigo-700
-                                                                              hover:file:bg-indigo-100
-                                                                            " />
+                            <input type="file" wire:model="uploads.ktp"
+                                class="block w-full text-sm text-gray-500
+                                                                                                                                                                                                                                                                                                                                              file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                              file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                              file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                              file:bg-indigo-50 file:text-indigo-700
+                                                                                                                                                                                                                                                                                                                                              hover:file:bg-indigo-100
+                                                                                                                                                                                                                                                                                                                                            " />
                             <p class="text-xs text-gray-400 mt-1">Wajib format PDF. Max 10MB.</p>
                             @error('uploads.ktp') <span class="text-red-500 text-xs block">{{ $message }}</span> @enderror
                         </div>
@@ -308,13 +335,14 @@
                         <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                             <label class="block text-sm font-bold text-gray-700 mb-2">2. Surat Pernyataan Keaslian <span
                                     class="text-red-500">*</span></label>
-                            <input type="file" wire:model="uploads.pernyataan" class="block w-full text-sm text-gray-500
-                                                                              file:mr-4 file:py-2 file:px-4
-                                                                              file:rounded-full file:border-0
-                                                                              file:text-sm file:font-semibold
-                                                                              file:bg-indigo-50 file:text-indigo-700
-                                                                              hover:file:bg-indigo-100
-                                                                            " />
+                            <input type="file" wire:model="uploads.pernyataan"
+                                class="block w-full text-sm text-gray-500
+                                                                                                                                                                                                                                                                                                                                              file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                              file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                              file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                              file:bg-indigo-50 file:text-indigo-700
+                                                                                                                                                                                                                                                                                                                                              hover:file:bg-indigo-100
+                                                                                                                                                                                                                                                                                                                                            " />
                             <p class="text-xs text-gray-400 mt-1">Wajib format PDF. Max 10MB.</p>
                             @error('uploads.pernyataan') <span class="text-red-500 text-xs block">{{ $message }}</span>
                             @enderror
@@ -340,13 +368,14 @@
                                         class="text-red-500">*</span></label>
 
                             </div>
-                            <input type="file" wire:model="uploads.pengalihan" class="block w-full text-sm text-gray-500
-                                                                              file:mr-4 file:py-2 file:px-4
-                                                                              file:rounded-full file:border-0
-                                                                              file:text-sm file:font-semibold
-                                                                              file:bg-gray-200 file:text-gray-700
-                                                                              hover:file:bg-gray-300
-                                                                            " />
+                            <input type="file" wire:model="uploads.pengalihan"
+                                class="block w-full text-sm text-gray-500
+                                                                                                                                                                                                                                                                                                                                              file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                              file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                              file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                              file:bg-gray-200 file:text-gray-700
+                                                                                                                                                                                                                                                                                                                                              hover:file:bg-gray-300
+                                                                                                                                                                                                                                                                                                                                            " />
                             <p class="text-xs text-gray-500 mt-1">Wajib format PDF, max 10MB</p>
                             <p>
                                 @error('uploads.pengalihan') <span class="text-red-500 text-xs block">{{ $message }}</span>
@@ -358,9 +387,9 @@
                             <label class="block text-sm font-bold text-gray-700">
                                 5. Link Ciptaan
                             </label>
-                            <input type="text" wire:model="uploads.link_ciptaan"
+                            <input type="text" wire:model="url_detail"
                                 class="mt-1 px-4 py-2 block w-full border border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
-                            @error("uploads.link_ciptaan")
+                            @error("uploads.url_detail")
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -470,20 +499,29 @@
                         </svg>
                     </button>
                 @else
-                    <button type="button"
-                        class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="text-sm">Siap Tanda Tangan</span>
-                    </button>
+                    <x-button x-on:click="$modalOpen('modal-id')">
+                        Open
+                    </x-button>
+
+                    <x-modal id='modal-id' center>
+                        <div class="px-6 text-center">
+                            <h1 class='text-2xl text-slate-800 font-semibold'>Masukan pin anda</h1>
+                            <p class='text-[0.75rem]'>Pin ini akan menjadi tanda tangan digital anda, untuk memastikan
+                                permohonan
+                                ini tidak bisa diubah</p>
+                        </div>
+                        <div class="w-full flex justify-center mt-5 flex-col items-center">
+                            <x-pin length="6" wire:model="pin" x-on:filled="$wire.submitProposal()" />
+                        </div>
+                    </x-modal>
+
                 @endif
             </div>
         </div>
     </div>
 
 </div>
+
+
+
 </div>
