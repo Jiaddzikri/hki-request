@@ -3,8 +3,8 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use App\Request\EncryptPrivateKeyRequest;
-use App\Services\KeyManagementService;
+use App\Request\HKI\EncryptPrivateKeyRequest;
+use App\Services\HKI\KeyManagementService;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Flux\Flux;

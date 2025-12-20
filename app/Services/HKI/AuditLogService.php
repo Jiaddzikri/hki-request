@@ -20,13 +20,15 @@ class AuditLogService
   public function logActivity(LogActivityRequest $request)
   {
     return DB::transaction(function () use ($request) {
-      $lastLog = HkiAuditLog::latest('id')->first();
+      $lastLog = HKIAuditLog::latest('id')->first();
+
+      $modelClass = get_class($request->modelType);
 
       $previousHash = $lastLog ? $lastLog->current_hash : str_repeat('0', 64);
 
       ksort($request->payload);
       $payloadJson = json_encode($request->payload);
-      $timestamp = now()->toIso8601String();
+      $timestamp = now()->format('Y-m-d H:i:s');
 
       $rawString = $previousHash . $request->user->id . $request->action . $payloadJson . $timestamp;
       $currentHash = hash('sha256', $rawString);
@@ -48,10 +50,10 @@ class AuditLogService
 
       return HkiAuditLog::create([
         'user_id' => $request->user->id,
-        'model_type' => $request->modelType,
+        'model_type' => $modelClass,
         'model_id' => $request->modelId,
         'action' => $request->action,
-        'payload' => $payloadJson,
+        'payload' => $request->payload,
         'previous_hash' => $previousHash,
         'current_hash' => $currentHash,
         'digital_signature' => base64_encode($signature),

@@ -71,7 +71,7 @@ class KeyManagementService
         $decryptedData = openssl_decrypt($ciphertext, self::CIPHER_ALGO, $encryptionKey, 0, $iv);
 
         if ($decryptedData === false) {
-            throw new Exception("PIN Salah atau Kunci Rusak.");
+            throw new Exception("PIN Salah atau Kunci Rusak.", 400);
         }
         $decryptedResponse = new DecryptPrivateKeyResponse();
         $decryptedResponse->decrypted = $decryptedData;
