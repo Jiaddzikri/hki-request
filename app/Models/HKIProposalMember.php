@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class HKIProposalMember extends Model
 {
     protected $table = 'hki_proposal_members';
-    
-    protected $guarded = [];
+
+    protected $fillable = [
+        'hki_proposal_id',
+        'user_id',
+        'name',
+        'role',
+        'nik',
+        'npwp',
+        'detail',
+        'nidn'
+    ];
 
     public function user(): BelongsTo
     {
