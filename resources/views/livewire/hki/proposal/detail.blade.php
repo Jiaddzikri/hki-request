@@ -1,3 +1,6 @@
+<x-slot name="sidebar">
+    <x-layouts.app.sidebar-hki />
+</x-slot>
 <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
     <div class="md:flex md:items-center md:justify-between mb-8">

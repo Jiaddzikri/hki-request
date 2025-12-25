@@ -46,7 +46,7 @@ class SocialiteController extends Controller
             }
             Auth::login($user);
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/');
         } catch(Exception $error) {
             return redirect('/login')->with('error', 'Login Gagal: ' . $error->getMessage());
         }
