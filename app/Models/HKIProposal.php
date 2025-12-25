@@ -23,6 +23,11 @@ class HKIProposal extends Model
         'url_detail'
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function members()
     {
         return $this->hasMany(HKIProposalMember::class, 'hki_proposal_id');

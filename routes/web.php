@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Hki\CertificateController;
 use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
 use App\Livewire\Hki\Dashboard;
+use App\Livewire\Hki\Forensic\PublicVerifier;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -71,6 +73,13 @@ Route::domain('hki.lppm.com')->middleware(['auth'])->group(function () {
 
     Route::get('/setup-security', \App\Livewire\Auth\SetupSecurity::class)
         ->name('setup.security');
+
+    Route::get('/hki/reviewer/inbox', \App\Livewire\Hki\Reviewer\Inbox::class)
+        ->name('hki.reviewer.inbox');
+
+    Route::get('/hki/certificate/{id}', [CertificateController::class, 'download'])->name('hki.certificate.download');
+
+    Route::get('/verify-doc/{id}', PublicVerifier::class)->name('public.verifier');
 });
 
 /*
