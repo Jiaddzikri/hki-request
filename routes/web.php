@@ -21,6 +21,10 @@ use Laravel\Fortify\Features;
 Route::domain('lppm.com')->group(function () {
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', \App\Livewire\Portal::class)->name('portal');
+
+        Route::get('/admin/users', \App\Livewire\Admin\UserManagement::class)
+        ->middleware('role:super-admin')
+        ->name('admin.users');
     });
 
     Route::middleware(['auth'])->group(function () {
