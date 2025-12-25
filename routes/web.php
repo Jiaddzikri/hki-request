@@ -4,6 +4,7 @@ use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
 use App\Livewire\Hki\Dashboard;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
@@ -16,18 +17,15 @@ use Laravel\Fortify\Features;
 |
 */
 Route::domain('lppm.com')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/', \App\Livewire\Portal::class)->name('portal');
     });
-    Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
     Route::middleware(['auth'])->group(function () {
         Route::redirect('settings', 'settings/profile');
 
         Route::get('settings/profile', Profile::class)->name('profile.edit');
-        // Route::get('settings/password', Password::class)->name('user-password.edit');
+        Route::get('settings/password', Password::class)->name('user-password.edit');
         Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
 
         Route::get('settings/two-factor', TwoFactor::class)
@@ -65,7 +63,7 @@ Route::domain('lppm.com')->group(function () {
 */
 Route::domain('hki.lppm.com')->middleware(['auth'])->group(function () {
 
-    Route::get('/',Dashboard::class)->name('hki.dashboard');
+    Route::get('/', Dashboard::class)->name('hki.dashboard');
 
     Route::get('/proposal/{id}', \App\Livewire\Hki\Proposal\Detail::class)->name('hki.show');
 
