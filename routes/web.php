@@ -5,6 +5,7 @@ use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
 use App\Livewire\Hki\Dashboard;
 use App\Livewire\Hki\Forensic\PublicVerifier;
+use App\Livewire\Hki\Proposal\Lists;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -23,8 +24,8 @@ Route::domain('lppm.com')->group(function () {
         Route::get('/', \App\Livewire\Portal::class)->name('portal');
 
         Route::get('/admin/users', \App\Livewire\Admin\UserManagement::class)
-        ->middleware('role:super-admin')
-        ->name('admin.users');
+            ->middleware('role:super-admin')
+            ->name('admin.users');
     });
 
     Route::middleware(['auth'])->group(function () {
@@ -70,19 +71,14 @@ Route::domain('lppm.com')->group(function () {
 Route::domain('hki.lppm.com')->middleware(['auth'])->group(function () {
 
     Route::get('/', Dashboard::class)->name('hki.dashboard');
-
+    Route::get('/list', Lists::class)->name('hki.list');
     Route::get('/proposal/{id}', \App\Livewire\Hki\Proposal\Detail::class)->name('hki.show');
-
     Route::get('/create', \App\Livewire\Hki\Proposal\Create::class)->name('hki.create');
-
     Route::get('/setup-security', \App\Livewire\Auth\SetupSecurity::class)
         ->name('setup.security');
-
     Route::get('/hki/reviewer/inbox', \App\Livewire\Hki\Reviewer\Inbox::class)
         ->name('hki.reviewer.inbox');
-
     Route::get('/hki/certificate/{id}', [CertificateController::class, 'download'])->name('hki.certificate.download');
-
     Route::get('/verify-doc/{id}', PublicVerifier::class)->name('public.verifier');
 });
 

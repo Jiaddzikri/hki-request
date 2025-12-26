@@ -1,9 +1,12 @@
 <div>
     <flux:navlist.group heading="Modul HKI">
 
-        <flux:navlist.item icon="home" href="{{ route('hki.dashboard') }}"
-            :current="request()->routeIs('hki.dashboard')">
-            Dashboard HKI
+    <flux:navlist.item icon="home" href="{{ route('hki.dashboard') }}" :current="request()->routeIs('hki.dashboard')">
+            Dashboard
+        </flux:navlist.item>
+
+        <flux:navlist.item icon="list-bullet" href="{{ route('hki.list') }}" :current="request()->routeIs('hki.list')">
+            List Proposal
         </flux:navlist.item>
 
         <flux:navlist.item icon="plus-circle" href="{{ route('hki.create') }}"
