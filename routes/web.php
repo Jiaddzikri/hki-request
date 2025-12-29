@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GrantContractController;
 use App\Http\Controllers\Hki\CertificateController;
 use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
@@ -98,6 +99,8 @@ Route::domain('surat.lppm.com')->middleware(['auth'])->group(function () {
     Route::get('/grants/create', LetterSubmission::class)->name('grants.create');
     Route::get('/grants/list', LetterList::class)->name('grants.list');
     Route::get('/grants/{id}', LetterDetail::class)->name('grants.detail');
+    Route::get('/grants/{id}/contract', [GrantContractController::class, 'download'])
+        ->name('grants.contract');
 });
 
 /*
