@@ -3,6 +3,9 @@
 use App\Http\Controllers\Hki\CertificateController;
 use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
+use App\Livewire\Letter\LetterDetail;
+use App\Livewire\Letter\LetterList;
+use App\Livewire\Letter\LetterSubmission;
 use App\Livewire\Hki\Dashboard;
 use App\Livewire\Hki\Forensic\PublicVerifier;
 use App\Livewire\Hki\Proposal\Lists;
@@ -91,6 +94,10 @@ Route::domain('surat.lppm.com')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return "Sistem Surat Tugas";
     })->name('spt.dashboard');
+
+    Route::get('/grants/create', LetterSubmission::class)->name('grants.create');
+    Route::get('/grants/list', LetterList::class)->name('grants.list');
+    Route::get('/grants/{id}', LetterDetail::class)->name('grants.detail');
 });
 
 /*

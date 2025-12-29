@@ -14,22 +14,72 @@
         </a>
 
         <flux:navlist variant="outline">
+            {{-- Slot Sidebar Custom (Jika ada view yang override) --}}
             @if (isset($sidebar))
-
                 {{ $sidebar }}
-
             @else
-
-
-                <flux:navlist.group heading="Menu Utama">
-                    <flux:navlist.item icon="home" href="{{ route('portal') }}">
+                
+                {{-- 1. DASHBOARD UTAMA --}}
+                <flux:navlist.group>
+                    <flux:navlist.item icon="home" href="{{ route('dashboard') }}" :current="request()->routeIs('dashboard')">
+                        Dashboard
+                    </flux:navlist.item>
+                    
+                    <flux:navlist.item icon="globe-alt" href="{{ route('portal') }}">
                         Portal LPPM
                     </flux:navlist.item>
                 </flux:navlist.group>
 
+
+                {{-- 2. MODUL SENTRA HKI --}}
+                <flux:navlist.group heading="Sentra HKI">
+                    <flux:navlist.item icon="document-plus" href="{{ route('hki.create') }}" :current="request()->routeIs('hki.create')">
+                        Ajukan HKI Baru
+                    </flux:navlist.item>
+
+                    <flux:navlist.item icon="archive-box" href="{{ route('hki.dashboard') }}" :current="request()->routeIs('hki.dashboard*')">
+                        Arsip HKI Saya
+                    </flux:navlist.item>
+                </flux:navlist.group>
+
+
+                {{-- 3. MODUL PENELITIAN & SURAT TUGAS --}}
+                <flux:navlist.group heading="Administrasi Penelitian">
+                    <flux:navlist.item icon="academic-cap" href="{{ route('grants.create') }}" :current="request()->routeIs('grants.create')">
+                        Pengajuan Hibah
+                    </flux:navlist.item>
+
+                    <flux:navlist.item icon="clipboard-document-list" href="#" :current="request()->routeIs('surat-tugas.*')">
+                        Surat Tugas & SK
+                    </flux:navlist.item>
+                </flux:navlist.group>
+
+
+                {{-- 4. AREA PEJABAT (REVIEWER) --}}
+                @can('review-hki')
+                    <flux:navlist.group heading="Area Reviewer">
+                        <flux:navlist.item icon="inbox-arrow-down" href="{{ route('hki.reviewer.inbox') }}" 
+                            :current="request()->routeIs('hki.reviewer.*')"
+                            badge="{{ \App\Models\HkiProposal::where('status', 'SUBMITTED')->count() }}">
+                            Inbox Review HKI
+                        </flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
+
+
+                {{-- 5. AREA ADMIN SYSTEM --}}
+                @role('super-admin')
+                    <flux:navlist.group heading="System Admin">
+                        <flux:navlist.item icon="users" href="{{ route('admin.users') }}" :current="request()->routeIs('admin.users')">
+                            Manajemen User
+                        </flux:navlist.item>
+                    </flux:navlist.group>
+                @endrole
+
+
+                {{-- 6. PENGATURAN AKUN --}}
                 <flux:navlist.group heading="Pengaturan">
-                    <flux:navlist.item icon="user-circle" href="{{ route('profile.edit') }}"
-                        :current="request()->routeIs('profile.*')">
+                    <flux:navlist.item icon="user-circle" href="{{ route('profile.edit') }}" :current="request()->routeIs('profile.*')">
                         Profile Saya
                     </flux:navlist.item>
                 </flux:navlist.group>
@@ -39,20 +89,16 @@
 
         <flux:spacer />
 
-
-        <!-- Desktop User Menu -->
         <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-            <flux:profile :name="auth()->user()->name" :avatar="asset(auth()->user()->avatar)"
-                icon:trailing="chevrons-up-down" />
+            <flux:profile :name="auth()->user()->name" :avatar="auth()->user()->profile_photo_url ?? asset('images/default-avatar.png')" icon:trailing="chevrons-up-down" />
 
             <flux:menu class="w-[220px]">
                 <flux:menu.radio.group>
                     <div class="p-0 text-sm font-normal">
                         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                             <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                <img class="w-full h-full" src="{{ asset(auth()->user()->avatar) }}" alt="">
+                                <img class="w-full h-full" src="{{ auth()->user()->profile_photo_url ?? asset('images/default-avatar.png') }}" alt="">
                             </span>
-
                             <div class="grid flex-1 text-start text-sm leading-tight">
                                 <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
                                 <span class="truncate text-xs">{{ auth()->user()->email }}</span>
@@ -81,26 +127,22 @@
         </flux:dropdown>
     </flux:sidebar>
 
-    <!-- Mobile User Menu -->
     <flux:header class="lg:hidden">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
-
         <flux:spacer />
-
         <flux:dropdown position="top" align="end">
-            <flux:profile :avatar="asset(auth()->user()->initials())" icon-trailing="chevron-down" />
-
+            {{-- Saya sesuaikan avatar logicnya agar aman --}}
+            <flux:profile :avatar="auth()->user()->profile_photo_url ?? asset('images/default-avatar.png')" icon-trailing="chevron-down" />
+            
             <flux:menu>
                 <flux:menu.radio.group>
                     <div class="p-0 text-sm font-normal">
                         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                             <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                <span
-                                    class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                    {{ auth()->user()->initials() }}
+                                <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                    {{ substr(auth()->user()->name, 0, 1) }}
                                 </span>
                             </span>
-
                             <div class="grid flex-1 text-start text-sm leading-tight">
                                 <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
                                 <span class="truncate text-xs">{{ auth()->user()->email }}</span>
@@ -133,5 +175,4 @@
 
     @fluxScripts
 </body>
-
 </html>
