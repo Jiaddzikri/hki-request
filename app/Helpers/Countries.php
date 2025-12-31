@@ -205,4 +205,10 @@ class Countries
       "ZW" => "Zimbabwe",
     ];
   }
+
+  public static function getCountryName($code): ?string
+  {
+    $countries = self::countries();
+    return $countries[$code] ?? null;
+  }
 }

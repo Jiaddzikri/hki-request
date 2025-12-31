@@ -18,31 +18,43 @@ class LTRSubmission extends Model
         'total_budget_approved' => 'decimal:2',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function scheme() {
+    public function scheme()
+    {
         return $this->belongsTo(LTRGrantScheme::class, 'grant_scheme_id');
     }
 
-    public function period() {
+    public function period()
+    {
         return $this->belongsTo(LTRAcademicPeriod::class, 'academic_period_id');
     }
 
-    public function members() {
+    public function members()
+    {
         return $this->hasMany(LTRSubmissionMember::class, 'submission_id');
     }
 
-    public function budgetDetails() {
+    public function budgetDetails()
+    {
         return $this->hasMany(LTRSubmissionBudgetDetail::class, 'submission_id');
     }
 
-    public function documents() {
+    public function documents()
+    {
         return $this->hasMany(LTRSubmissionDocument::class, 'submission_id');
     }
-    
-    public function isEditable() {
+
+    public function isEditable()
+    {
         return in_array($this->status, ['DRAFT', 'REVISION_REQUIRED']);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(LTRSubmissionReport::class, 'submission_id');
     }
 }
