@@ -9,78 +9,99 @@ use App\Services\HKI\AuditLogService;
 use App\Request\HKI\LogActivityRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Helpers\Countries;
 
 #[Layout('components.layouts.app')]
 
 class Detail extends Component
 {
-    public ?HKIProposal $proposal;
-    
-    public $showReviewModal = false;
-    public $reviewAction = '';
-    public $reviewNote = '';
-    public $pin = '';
+  public ?HKIProposal $proposal;
 
-    public function mount($id)
-    {
-        $this->proposal = HKIProposal::with(['user', 'type', 'auditLogs.user'])->findOrFail($id);
-    }
-    public function confirmReview($action)
-    {
-        if (!Gate::allows('review-hki')) {
-            abort(403, 'Anda tidak memiliki akses sebagai Reviewer.');
-        }
+  public $showReviewModal = false;
+  public $showDetailModal = false;
+  public $reviewAction = '';
+  public $reviewNote = '';
+  public $pin = '';
 
-        $this->reviewAction = $action;
-        $this->showReviewModal = true;
-        $this->reset(['reviewNote', 'pin']);
-    }
+  public function mount($id)
+  {
+    $this->proposal = HKIProposal::with(['user', 'type', 'auditLogs.user', 'members.user', 'documents'])->findOrFail($id);
+  }
 
-    public function submitReview(AuditLogService $auditService)
-    {
-        $this->validate([
-            'reviewNote' => 'required|string|min:5',
-            'pin' => 'required|digits:6',
-        ]);
+  public function showDetailModal()
+  {
+    $this->showDetailModal = true;
+    $this->dispatch('modal-opened');
+  }
 
-        $newStatus = ($this->reviewAction === 'APPROVE') ? 'APPROVED' : 'REJECTED';
-        $logAction = ($this->reviewAction === 'APPROVE') ? 'APPROVE_PROPOSAL' : 'REJECT_PROPOSAL';
-
-        try {
-            $this->proposal->status = $newStatus;
-
-            $this->proposal->save();
-            
-            $request = new LogActivityRequest();
-            $request->user = Auth::user();
-            $request->action = $logAction;
-            $request->modelType = $this->proposal;
-            $request->modelId = $this->proposal->id;
-            
-            $request->payload = [
-                'decision' => $newStatus,
-                'note' => $this->reviewNote,
-                'reviewer_name' => Auth::user()->name,
-                'timestamp' => now()->format('Y-m-d H:i:s')
-            ];
-            
-
-            $request->pin = trim((string) $this->pin); 
-
-            $auditService->logActivity($request);
-
-            $this->showReviewModal = false;
-            session()->flash('success', "Proposal berhasil di-{$this->reviewAction}.");
-            
-            return redirect()->route('hki.reviewer.inbox');
-
-        } catch (\Exception $e) {
-            $this->addError('pin', $e->getMessage());
-        }
+  public function closeDetailModal()
+  {
+    $this->showDetailModal = false;
+    $this->dispatch('modal-closed');
+  }
+  public function confirmReview($action)
+  {
+    if (!Gate::allows('review-hki')) {
+      abort(403, 'Anda tidak memiliki akses sebagai Reviewer.');
     }
 
-    public function render()
-    {
-        return view('livewire.hki.proposal.detail');
+    $this->reviewAction = $action;
+    $this->showReviewModal = true;
+    $this->reset(['reviewNote', 'pin']);
+  }
+
+  public function submitReview(AuditLogService $auditService)
+  {
+    $this->validate([
+      'reviewNote' => 'required|string|min:5',
+      'pin' => 'required|digits:6',
+    ]);
+
+    $newStatus = ($this->reviewAction === 'APPROVE') ? 'APPROVED' : 'REJECTED';
+    $logAction = ($this->reviewAction === 'APPROVE') ? 'APPROVE_PROPOSAL' : 'REJECT_PROPOSAL';
+
+    try {
+      $this->proposal->status = $newStatus;
+
+      $this->proposal->save();
+
+      $request = new LogActivityRequest();
+      $request->user = Auth::user();
+      $request->action = $logAction;
+      $request->modelType = $this->proposal;
+      $request->modelId = $this->proposal->id;
+
+      $request->payload = [
+        'decision' => $newStatus,
+        'note' => $this->reviewNote,
+        'reviewer_name' => Auth::user()->name,
+        'timestamp' => now()->format('Y-m-d H:i:s')
+      ];
+
+
+      $request->pin = trim((string) $this->pin);
+
+      $auditService->logActivity($request);
+
+      $this->showReviewModal = false;
+      session()->flash('success', "Proposal berhasil di-{$this->reviewAction}.");
+
+      return redirect()->route('hki.reviewer.inbox');
+
+    } catch (\Exception $e) {
+      $this->addError('pin', $e->getMessage());
     }
+  }
+
+  public function render()
+  {
+    return view('livewire.hki.proposal.detail');
+  }
+
+  public function getCountryName($code)
+  {
+    $countries = \App\Helpers\Countries::countries();
+    return $countries[$code] ?? 'Tidak Diketahui';
+  }
 }

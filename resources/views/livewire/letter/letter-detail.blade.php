@@ -224,4 +224,107 @@
         </div>
 
     </div>
+    @if($submission->status === 'APPROVED')
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mt-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex justify-between items-center">
+                <span>Laporan Kemajuan & Akhir</span>
+                <span class="text-xs font-normal text-gray-500">Wajib diisi setelah penelitian selesai</span>
+            </h3>
+
+            {{-- 1. FORM UPLOAD (Hanya untuk Ketua Pengusul) --}}
+            @if(auth()->id() === $submission->user_id)
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+                    <h4 class="font-bold text-gray-800 text-sm mb-2">Unggah Laporan Baru</h4>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700">Jenis Laporan</label>
+                            <select wire:model="reportPhase"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option value="AKHIR">Laporan Akhir (100%)</option>
+                                <option value="KEMAJUAN">Laporan Kemajuan (70%)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700">Ringkasan / Catatan</label>
+                            <textarea wire:model="reportNotes" rows="2"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                placeholder="Contoh: Laporan akhir penelitian beserta bukti pengeluaran dana..."></textarea>
+                            @error('reportNotes') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700">File Laporan (PDF, Max
+                                10MB)</label>
+                            <input type="file" wire:model="reportFile"
+                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            @error('reportFile') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="text-right">
+                            {{-- Loading Indicator --}}
+                            <span wire:loading wire:target="reportFile" class="text-xs text-indigo-600 mr-2">Uploading...</span>
+
+                            <button wire:click="uploadReport" wire:loading.attr="disabled"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none disabled:opacity-50">
+                                Kirim Laporan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- 2. LIST RIWAYAT LAPORAN --}}
+            @if($submission->reports->isEmpty())
+                <p class="text-sm text-gray-500 italic text-center py-4">Belum ada laporan yang diunggah.</p>
+            @else
+                <div class="space-y-3">
+                    @foreach($submission->reports as $rpt)
+                        <div class="flex items-start justify-between p-3 border rounded-lg bg-white hover:bg-gray-50 transition">
+                            <div class="flex items-start gap-3">
+                                {{-- Icon PDF --}}
+                                <div class="bg-red-100 text-red-600 p-2 rounded">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-gray-900 text-sm">
+                                            {{ $rpt->phase == 'AKHIR' ? 'Laporan Akhir' : 'Laporan Kemajuan' }}
+                                        </span>
+                                        {{-- Status Badge --}}
+                                        @php
+                                            $badges = [
+                                                'PENDING' => 'bg-yellow-100 text-yellow-800',
+                                                'ACCEPTED' => 'bg-green-100 text-green-800',
+                                                'REJECTED' => 'bg-red-100 text-red-800',
+                                            ];
+                                        @endphp
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ $badges[$rpt->status] }}">
+                                            {{ $rpt->status }}
+                                        </span>
+                                    </div>
+
+                                    <p class="text-xs text-gray-600 mt-1 line-clamp-1">{{ $rpt->notes }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-1 font-mono">
+                                        SHA256: {{ substr($rpt->file_hash, 0, 16) }}...
+                                    </p>
+                                </div>
+                            </div>
+
+                            <a href="{{ Storage::url($rpt->file_path) }}" target="_blank"
+                                class="text-indigo-600 hover:text-indigo-800 text-xs font-bold underline mt-2">
+                                Download
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    @endif
 </div>
