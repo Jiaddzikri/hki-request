@@ -351,9 +351,9 @@
                     </div>
                 </div>
                 <ul role="list" class="divide-y divide-gray-100">
-                    @foreach($proposal->members as $member)
+                    @foreach($proposal->members as $index => $member)
                         <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="flex items-center space-x-4">
+                            <div class="flex items-start space-x-4">
                                 <div class="flex-shrink-0">
                                     <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-600 to-slate-700 flex items-center justify-center text-white font-bold text-lg shadow-md border-2 border-white">
                                         {{ strtoupper(substr($member->name, 0, 1)) }}
@@ -361,23 +361,93 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between">
-                                        <p class="text-sm font-bold text-gray-900 truncate">{{ $member->name }}</p>
-                                        <span class="ml-2 px-3 py-1 inline-flex items-center text-xs leading-5 font-bold rounded-lg {{ $member->role == 'KETUA' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-gray-100 text-gray-800 border border-gray-200' }}">
-                                            @if($member->role == 'KETUA')
-                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                        <p class="text-sm font-bold text-gray-900">{{ $member->name }}</p>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-bold rounded-lg {{ $member->role == 'KETUA' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-gray-100 text-gray-800 border border-gray-200' }}">
+                                                @if($member->role == 'KETUA')
+                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                @endif
+                                                {{ $member->role }}
+                                            </span>
+                                            <button 
+                                                wire:click="toggleMemberDetail({{ $member->id }})"
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all duration-200 shadow-sm">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
-                                            @endif
-                                            {{ $member->role }}
-                                        </span>
+                                                <span>{{ $expandedMemberId === $member->id ? 'Tutup' : 'Detail' }}</span>
+                                            </button>
+                                        </div>
                                     </div>
                                     <p class="mt-1 flex items-center text-sm text-gray-600 font-medium">
                                         <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
                                         </svg>
-                                        NIK: {{ $member->nik }}
+                                        NIK: {{ $member->nik ?? 'Tidak Tersedia' }}
                                     </p>
+
+                                    {{-- Detail Section (Expandable) --}}
+                                    @if($expandedMemberId === $member->id)
+                                        <div class="mt-3 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-4 border border-gray-200 shadow-sm">
+                                            <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                </svg>
+                                                Informasi Detail Anggota
+                                            </h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->name }}</dd>
+                                                </div>
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Peran</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->role }}</dd>
+                                                </div>
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NIK</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->nik ?? 'Tidak Tersedia' }}</dd>
+                                                </div>
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NIDN</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->nidn ?? ($member->user->nidn ?? 'Tidak Tersedia') }}</dd>
+                                                </div>
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NPWP</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->npwp ?? 'Tidak Tersedia' }}</dd>
+                                                </div>
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Email</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->email ?? 'Tidak Tersedia' }}</dd>
+                                                </div>
+
+                                                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Bergabung</dt>
+                                                    <dd class="text-sm font-semibold text-gray-900">{{ $member->created_at->format('d F Y, H:i') }}</dd>
+                                                </div>
+                                            </div>
+                                            
+                                            @if($member->detail)
+                                                <div class="mt-3 bg-white p-4 rounded-lg border border-gray-200">
+                                                    <dt class="text-xs font-bold text-gray-500 uppercase mb-2 flex items-center">
+                                                        <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                            </path>
+                                                        </svg>
+                                                        Detail Tambahan
+                                                    </dt>
+                                                    <dd class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $member->detail }}</dd>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </li>
@@ -787,36 +857,77 @@
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-center justify-between mb-2">
                                                     <h5 class="text-sm font-bold text-gray-900">{{ $member->name }}</h5>
-                                                    <span class="px-2 py-1 text-xs font-bold rounded-lg {{ $member->role == 'KETUA' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-gray-100 text-gray-800 border border-gray-200' }}">
-                                                        {{ $member->role }}
-                                                    </span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="px-2 py-1 text-xs font-bold rounded-lg {{ $member->role == 'KETUA' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-gray-100 text-gray-800 border border-gray-200' }}">
+                                                            {{ $member->role }}
+                                                        </span>
+                                                        <button 
+                                                            wire:click="toggleMemberDetail({{ $member->id }})"
+                                                            type="button"
+                                                            class="inline-flex items-center px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all duration-200 shadow-sm">
+                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                            </svg>
+                                                            <span>{{ $expandedMemberId === $member->id ? 'Tutup' : 'Detail' }}</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <dl class="grid grid-cols-2 gap-4 text-xs">
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">NIK</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->nik ?? 'Tidak Tersedia' }}</dd>
+                                                
+                                                @if($expandedMemberId !== $member->id)
+                                                    {{-- Summary View --}}
+                                                    <dl class="grid grid-cols-2 gap-4 text-xs">
+                                                        <div>
+                                                            <dt class="font-bold text-gray-500">NIK</dt>
+                                                            <dd class="font-medium text-gray-900">{{ $member->nik ?? 'Tidak Tersedia' }}</dd>
+                                                        </div>
+                                                        <div>
+                                                            <dt class="font-bold text-gray-500">NIDN</dt>
+                                                            <dd class="font-medium text-gray-900">{{ $member->nidn ?? ($member->user->nidn ?? 'Tidak Tersedia') }}</dd>
+                                                        </div>
+                                                    </dl>
+                                                @else
+                                                    {{-- Expanded Detail View --}}
+                                                    <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-4 border border-gray-200 mt-2">
+                                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                            <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NIK</dt>
+                                                                <dd class="text-sm font-semibold text-gray-900">{{ $member->nik ?? 'Tidak Tersedia' }}</dd>
+                                                            </div>
+                                                            <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NIDN</dt>
+                                                                <dd class="text-sm font-semibold text-gray-900">{{ $member->nidn ?? ($member->user->nidn ?? 'Tidak Tersedia') }}</dd>
+                                                            </div>
+                                                            <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-1">NPWP</dt>
+                                                                <dd class="text-sm font-semibold text-gray-900">{{ $member->npwp ?? 'Tidak Tersedia' }}</dd>
+                                                            </div>
+                                                            <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Email</dt>
+                                                                <dd class="text-sm font-semibold text-gray-900">{{ $member->email ?? 'Tidak Tersedia' }}</dd>
+                                                            </div>
+                                                        
+                                                            <div class="bg-white p-3 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Bergabung</dt>
+                                                                <dd class="text-sm font-semibold text-gray-900">{{ $member->created_at->format('d F Y, H:i') }}</dd>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        @if($member->detail)
+                                                            <div class="mt-3 bg-white p-4 rounded-lg border border-gray-200">
+                                                                <dt class="text-xs font-bold text-gray-500 uppercase mb-2 flex items-center">
+                                                                    <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                                        </path>
+                                                                    </svg>
+                                                                    Detail Tambahan
+                                                                </dt>
+                                                                <dd class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $member->detail }}</dd>
+                                                            </div>
+                                                        @endif
                                                     </div>
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">NIDN</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->nidn ?? ($member->user->nik ?? 'Tidak Tersedia') }}</dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">NIDN</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->nidn ?? ($member->user->nidn ?? 'Tidak Tersedia') }}</dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">NPWP</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->npwp ?? 'Tidak Tersedia' }}</dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">Email</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->user->email ?? 'Tidak Tersedia' }}</dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt class="font-bold text-gray-500">Bergabung</dt>
-                                                        <dd class="font-medium text-gray-900">{{ $member->created_at->format('d/m/Y') }}</dd>
-                                                    </div>
-                                                </dl>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -952,22 +1063,4 @@
     </div>
 @endif
 
-<script>
-document.addEventListener('livewire:init', () => {
-    console.log('Livewire initialized');
-    
-    Livewire.on('modal-opened', () => {
-        console.log('Detail modal opened');
-    });
-    
-    Livewire.on('modal-closed', () => {
-        console.log('Detail modal closed');
-    });
-});
-
-// Debug: Add click event listener
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded');
-});
-</script>
 
