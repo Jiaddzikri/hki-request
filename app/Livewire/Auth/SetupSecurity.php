@@ -9,50 +9,50 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Flux\Flux;
 
-#[Layout('components.layouts.auth')] 
+#[Layout('components.layouts.auth')]
 class SetupSecurity extends Component
 {
-    public string $pin = '';
-    public string $pin_confirmation = '';
+  public string $pin = '';
+  public string $pin_confirmation = '';
 
-    public function save(KeyManagementService $keyService)
-    {
-        $this->validate([
-            'pin' => 'required|digits:6|confirmed',
-        ]);
+  public function save(KeyManagementService $keyService)
+  {
+    $this->validate([
+      'pin' => 'required|digits:6|confirmed',
+    ]);
 
-        try {
-            $keys = $keyService->generateKeyPair();
+    try {
+      $keys = $keyService->generateKeyPair();
 
-            $request = new EncryptPrivateKeyRequest();
-            $request->privateKey = $keys->privateKey;
-            $request->pin = $this->pin;
+      $request = new EncryptPrivateKeyRequest();
+      $request->privateKey = $keys->privateKey;
+      $request->pin = $this->pin;
 
-            $encryptedResponse = $keyService->encryptPrivateKey($request);
+      $encryptedResponse = $keyService->encryptPrivateKey($request);
 
-            $user = auth()->user();
-            
-            $user->update([
-                'public_key' => $keys->publicKey,
-                'private_key_encrypted' => $encryptedResponse->base64,
-            ]);
+      $user = auth()->user();
 
-            session()->flash('status', 'Identitas Digital Berhasil Dibuat!');
-            
-            return redirect()->route('dashboard');
+      $user->update([
+        'public_key' => $keys->publicKey,
+        'private_key_encrypted' => $encryptedResponse->base64,
+      ]);
 
-        } catch (\Exception $e) {
-            if($e->getCode() >= 500) {
-            $this->addError('pin', 'Terjadi kesalahan sistem: ');
-            } else {
-            $this->addError('pin', $e->getMessage());
+      session()->flash('status', 'Identitas Digital Berhasil Dibuat!');
 
-            }
-        } 
+      return redirect()->route('portal');
+
+    } catch (\Exception $e) {
+      if ($e->getCode() >= 500) {
+        $this->addError('pin', 'Terjadi kesalahan sistem: ');
+      } else {
+        $this->addError('pin', $e->getMessage());
+
+      }
     }
+  }
 
-    public function render()
-    {
-        return view('livewire.auth.setup-security');
-    }
+  public function render()
+  {
+    return view('livewire.auth.setup-security');
+  }
 }

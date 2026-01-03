@@ -3,58 +3,64 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LTRSubmission extends Model
+class LtrSubmission extends Model
 {
-    use SoftDeletes;
+  protected $table = 'ltr_submissions';
 
-    protected $table = 'ltr_submissions';
+  protected $fillable = [
+    'user_id',
+    'ltr_category_id',
+    'ltr_unit_id',
+    'description',
+    'indicators',
+    'budget',
+    'planned_start_date',
+    'planned_end_date',
+    'url_documentation',
+    'status',
+    'reviewer_id',
+    'review_notes',
+    'reviewed_at',
+  ];
 
-    protected $guarded = [];
+  protected $casts = [
+    'budget' => 'double',
+    'planned_start_date' => 'datetime',
+    'planned_end_date' => 'datetime',
+    'reviewed_at' => 'datetime',
+  ];
 
-    protected $casts = [
-        'total_budget_proposed' => 'decimal:2',
-        'total_budget_approved' => 'decimal:2',
-    ];
+  /**
+   * Get the user that owns the submission
+   */
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'user_id');
+  }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+  /**
+   * Get the category for this submission
+   */
+  public function category(): BelongsTo
+  {
+    return $this->belongsTo(LtrCategory::class, 'ltr_category_id');
+  }
 
-    public function scheme()
-    {
-        return $this->belongsTo(LTRGrantScheme::class, 'grant_scheme_id');
-    }
+  /**
+   * Get the unit for this submission
+   */
+  public function unit(): BelongsTo
+  {
+    return $this->belongsTo(LtrUnit::class, 'ltr_unit_id');
+  }
 
-    public function period()
-    {
-        return $this->belongsTo(LTRAcademicPeriod::class, 'academic_period_id');
-    }
-
-    public function members()
-    {
-        return $this->hasMany(LTRSubmissionMember::class, 'submission_id');
-    }
-
-    public function budgetDetails()
-    {
-        return $this->hasMany(LTRSubmissionBudgetDetail::class, 'submission_id');
-    }
-
-    public function documents()
-    {
-        return $this->hasMany(LTRSubmissionDocument::class, 'submission_id');
-    }
-
-    public function isEditable()
-    {
-        return in_array($this->status, ['DRAFT', 'REVISION_REQUIRED']);
-    }
-
-    public function reports()
-    {
-        return $this->hasMany(LTRSubmissionReport::class, 'submission_id');
-    }
+  /**
+   * Get the reviewer that reviewed this submission
+   */
+  public function reviewer(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'reviewer_id');
+  }
 }
