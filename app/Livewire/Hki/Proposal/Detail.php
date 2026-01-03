@@ -23,10 +23,20 @@ class Detail extends Component
   public $reviewAction = '';
   public $reviewNote = '';
   public $pin = '';
+  public $expandedMemberId = null;
 
   public function mount($id)
   {
     $this->proposal = HKIProposal::with(['user', 'type', 'auditLogs.user', 'members.user', 'documents'])->findOrFail($id);
+  }
+
+  public function toggleMemberDetail($memberId)
+  {
+    if ($this->expandedMemberId === $memberId) {
+      $this->expandedMemberId = null;
+    } else {
+      $this->expandedMemberId = $memberId;
+    }
   }
 
   public function showDetailModal()
