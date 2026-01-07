@@ -114,7 +114,16 @@ Route::domain('surat.lppm.com')->middleware(['auth', 'security-keys'])->group(fu
 |--------------------------------------------------------------------------
 */
 Route::domain('buku.lppm.com')->middleware(['auth', 'security-keys'])->group(function () {
-  Route::get('/', function () {
-    return "Sistem Peminjaman Buku";
-  })->name('buku.dashboard');
+  Route::get('/', \App\Livewire\Book\Index::class)->name('book.index');
+  Route::get('/create', \App\Livewire\Book\Create::class)->name('book.create');
+
+  // Reviewer routes - only accessible by users with 'reviewer' or 'super-admin' role
+  // PENTING: Letakkan sebelum route /{id} agar tidak tertangkap sebagai parameter
+  Route::middleware(['role:reviewer|super-admin'])->group(function () {
+    Route::get('/reviewer', \App\Livewire\Book\ReviewerIndex::class)->name('book.reviewer.index');
+    Route::get('/reviewer/{id}', \App\Livewire\Book\ReviewerDetail::class)->name('book.reviewer.detail');
+  });
+
+  // Route detail dengan parameter {id} - letakkan paling bawah
+  Route::get('/{id}', \App\Livewire\Book\Detail::class)->name('book.detail');
 });
