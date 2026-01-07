@@ -115,39 +115,42 @@
             <div class="h-1 bg-blue-800 transform scale-x-0 group-hover:scale-x-100 transition-transform"></div>
           </a>
 
-          {{-- Buku Ajar Card (Coming Soon) --}}
-          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden opacity-60">
+          {{-- Buku Ajar Card --}}
+          <a href="{{ route('book.index') }}"
+            class="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 overflow-hidden">
             <div class="p-6">
               <div class="flex items-start justify-between mb-4">
-                <div class="flex-shrink-0 w-12 h-12 bg-gray-400 rounded-md flex items-center justify-center">
+                <div
+                  class="flex-shrink-0 w-12 h-12 bg-blue-800 rounded-md flex items-center justify-center group-hover:bg-blue-900 transition-colors">
                   <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
                 <span
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200">
-                  Segera Hadir
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
+                  Aktif
                 </span>
               </div>
 
               <h3 class="text-lg font-bold text-gray-900 mb-2">
-                Pengajuan Buku Ajar
+                Permohonan ISBN
               </h3>
               <p class="text-sm text-gray-600 leading-relaxed mb-4">
-                Fasilitasi penerbitan buku ajar dan monograf ber-ISBN.
+                Fasilitasi permohonan ISBN untuk terbitan buku ajar, monograf, dan karya ilmiah lainnya.
               </p>
 
-              <div class="flex items-center text-sm font-semibold text-gray-400">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+              <div class="flex items-center text-sm font-semibold text-blue-800 group-hover:text-blue-900">
+                <span>Akses Layanan</span>
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6">
                   </path>
                 </svg>
-                <span>Dalam Pengembangan</span>
               </div>
             </div>
-          </div>
+            <div class="h-1 bg-blue-800 transform scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+          </a>
 
         </div>
       </div>

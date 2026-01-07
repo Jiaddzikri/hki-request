@@ -1,12 +1,12 @@
 <x-slot name="sidebar">
   <x-layouts.app.sidebar-hki />
 </x-slot>
-<div class="">
-  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+<div class="p-6">
+  <div class="max-w-7xl mx-auto">
 
     <!-- Header -->
     <div class="mb-6">
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="text-2xl font-bold text-gray-900">
         Pengajuan HKI Baru
       </h2>
       <p class="mt-1 text-sm text-gray-600">
@@ -16,15 +16,15 @@
 
     <!-- Progress Steps -->
     <div class="mb-8">
-      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+      <div class="bg-white overflow-hidden rounded-lg border border-gray-200 p-6">
         <nav aria-label="Progress">
           <ol role="list" class="space-y-4 md:flex md:space-y-0 md:space-x-8">
             <!-- Step 1 -->
             <li class="md:flex-1">
               <div
-                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 1 ? 'border-indigo-600' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
+                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 1 ? 'border-blue-800' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
                 <span
-                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 1 ? 'text-indigo-600' : 'text-gray-500' }}">Step
+                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 1 ? 'text-blue-800' : 'text-gray-500' }}">Step
                   1</span>
                 <span class="text-sm font-medium">Informasi</span>
               </div>
@@ -33,9 +33,9 @@
             <!-- Step 2 -->
             <li class="md:flex-1">
               <div
-                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 2 ? 'border-indigo-600' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
+                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 2 ? 'border-blue-800' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
                 <span
-                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 2 ? 'text-indigo-600' : 'text-gray-500' }}">Step
+                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 2 ? 'text-blue-800' : 'text-gray-500' }}">Step
                   2</span>
                 <span class="text-sm font-medium">Anggota</span>
               </div>
@@ -44,9 +44,9 @@
             <!-- Step 3 -->
             <li class="md:flex-1">
               <div
-                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 3 ? 'border-indigo-600' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
+                class="group pl-4 py-2 flex flex-col border-l-4 {{ $step >= 3 ? 'border-blue-800' : 'border-gray-200' }} md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
                 <span
-                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 3 ? 'text-indigo-600' : 'text-gray-500' }}">Step
+                  class="text-xs font-semibold tracking-wide uppercase {{ $step >= 3 ? 'text-blue-800' : 'text-gray-500' }}">Step
                   3</span>
                 <span class="text-sm font-medium">Dokumen</span>
               </div>
@@ -320,12 +320,12 @@
                   class="text-red-500">*</span></label>
               <input type="file" wire:model="uploads.ktp"
                 class="block w-full text-sm text-gray-500
-                                                                                                                                                                                                                                                                                                                                                file:mr-4 file:py-2 file:px-4
-                                                                                                                                                                                                                                                                                                                                                file:rounded-full file:border-0
-                                                                                                                                                                                                                                                                                                                                                file:text-sm file:font-semibold
-                                                                                                                                                                                                                                                                                                                                                file:bg-indigo-50 file:text-indigo-700
-                                                                                                                                                                                                                                                                                                                                                hover:file:bg-indigo-100
-                                                                                                                                                                                                                                                                                                                                              " />
+                                                                                                                                                                                                                                                                                                                                                  file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                                  file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                                  file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                                  file:bg-indigo-50 file:text-indigo-700
+                                                                                                                                                                                                                                                                                                                                                  hover:file:bg-indigo-100
+                                                                                                                                                                                                                                                                                                                                                " />
               <p class="text-xs text-gray-400 mt-1">Wajib format PDF. Max 10MB.</p>
               @error('uploads.ktp') <span class="text-red-500 text-xs block">{{ $message }}</span> @enderror
             </div>
@@ -335,12 +335,12 @@
                   class="text-red-500">*</span></label>
               <input type="file" wire:model="uploads.pernyataan"
                 class="block w-full text-sm text-gray-500
-                                                                                                                                                                                                                                                                                                                                                file:mr-4 file:py-2 file:px-4
-                                                                                                                                                                                                                                                                                                                                                file:rounded-full file:border-0
-                                                                                                                                                                                                                                                                                                                                                file:text-sm file:font-semibold
-                                                                                                                                                                                                                                                                                                                                                file:bg-indigo-50 file:text-indigo-700
-                                                                                                                                                                                                                                                                                                                                                hover:file:bg-indigo-100
-                                                                                                                                                                                                                                                                                                                                              " />
+                                                                                                                                                                                                                                                                                                                                                  file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                                  file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                                  file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                                  file:bg-indigo-50 file:text-indigo-700
+                                                                                                                                                                                                                                                                                                                                                  hover:file:bg-indigo-100
+                                                                                                                                                                                                                                                                                                                                                " />
               <p class="text-xs text-gray-400 mt-1">Wajib format PDF. Max 10MB.</p>
               @error('uploads.pernyataan') <span class="text-red-500 text-xs block">{{ $message }}</span>
               @enderror
@@ -367,12 +367,12 @@
               </div>
               <input type="file" wire:model="uploads.pengalihan"
                 class="block w-full text-sm text-gray-500
-                                                                                                                                                                                                                                                                                                                                                file:mr-4 file:py-2 file:px-4
-                                                                                                                                                                                                                                                                                                                                                file:rounded-full file:border-0
-                                                                                                                                                                                                                                                                                                                                                file:text-sm file:font-semibold
-                                                                                                                                                                                                                                                                                                                                                file:bg-gray-200 file:text-gray-700
-                                                                                                                                                                                                                                                                                                                                                hover:file:bg-gray-300
-                                                                                                                                                                                                                                                                                                                                              " />
+                                                                                                                                                                                                                                                                                                                                                  file:mr-4 file:py-2 file:px-4
+                                                                                                                                                                                                                                                                                                                                                  file:rounded-full file:border-0
+                                                                                                                                                                                                                                                                                                                                                  file:text-sm file:font-semibold
+                                                                                                                                                                                                                                                                                                                                                  file:bg-gray-200 file:text-gray-700
+                                                                                                                                                                                                                                                                                                                                                  hover:file:bg-gray-300
+                                                                                                                                                                                                                                                                                                                                                " />
               <p class="text-xs text-gray-500 mt-1">Wajib format PDF, max 10MB</p>
               <p>
                 @error('uploads.pengalihan') <span class="text-red-500 text-xs block">{{ $message }}</span>
