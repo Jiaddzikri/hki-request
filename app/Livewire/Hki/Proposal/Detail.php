@@ -3,6 +3,7 @@
 namespace App\Livewire\Hki\Proposal;
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use App\Models\HkiProposal;
 use App\Services\HKI\AuditLogService;
@@ -16,102 +17,206 @@ use App\Helpers\Countries;
 
 class Detail extends Component
 {
-  public ?HKIProposal $proposal;
+  #[Locked]
+  public $proposalId;
 
   public $showReviewModal = false;
-  public $showDetailModal = false;
-  public $reviewAction = '';
-  public $reviewNote = '';
-  public $pin = '';
-  public $expandedMemberId = null;
+  public $reviewDecision = '';
+  public $reviewNotes = '';
+  public $isEditMode = false;
+
+  // Form fields for editing
+  public $title = '';
+  public $hki_type_id = '';
+  public $publication_country = '';
+  public $publication_city = '';
+  public $publication_date = '';
+  public $description = '';
 
   public function mount($id)
   {
-    $this->proposal = HKIProposal::with(['user', 'type', 'auditLogs.user', 'members.user', 'documents'])->findOrFail($id);
-  }
+    $this->proposalId = $id;
 
-  public function toggleMemberDetail($memberId)
-  {
-    if ($this->expandedMemberId === $memberId) {
-      $this->expandedMemberId = null;
-    } else {
-      $this->expandedMemberId = $memberId;
+    // Check authorization
+    $proposal = HKIProposal::findOrFail($id);
+    if ($proposal->user_id !== auth()->id() && !auth()->user()->hasRole('super-admin|reviewer')) {
+      abort(403);
     }
   }
 
-  public function showDetailModal()
+  private function getProposal()
   {
-    $this->showDetailModal = true;
-    $this->dispatch('modal-opened');
+    return HKIProposal::with([
+      'user',
+      'type',
+      'auditLogs.user',
+      'members.user',
+      'documents',
+      'reviews' => function ($query) {
+        $query->latest('reviewed_at');
+      },
+      'reviews.reviewer'
+    ])->findOrFail($this->proposalId);
   }
 
-  public function closeDetailModal()
+  public function enableEditMode()
   {
-    $this->showDetailModal = false;
-    $this->dispatch('modal-closed');
+    $proposal = $this->getProposal();
+
+    // Only allow edit if status is REVISION
+    if ($proposal->status !== 'REVISION') {
+      session()->flash('error', 'Hanya proposal dengan status revisi yang dapat diubah.');
+      return;
+    }
+
+    $this->isEditMode = true;
+
+    // Populate form fields with current data - ensure all are strings
+    $this->title = (string) $proposal->title;
+    $this->hki_type_id = (string) $proposal->hki_type_id;
+    $this->publication_country = (string) $proposal->publication_country;
+    $this->publication_city = (string) $proposal->publication_city;
+    $this->publication_date = $proposal->publication_date ? \Carbon\Carbon::parse($proposal->publication_date)->format('Y-m-d') : '';
+    $this->description = (string) ($proposal->description ?? '');
   }
-  public function confirmReview($action)
+
+  public function cancelEdit()
+  {
+    $this->isEditMode = false;
+    $this->reset([
+      'title',
+      'hki_type_id',
+      'publication_country',
+      'publication_city',
+      'publication_date',
+      'description'
+    ]);
+  }
+
+  public function saveRevision()
+  {
+    // Validate
+    $validated = $this->validate([
+      'title' => 'required|string|max:255',
+      'hki_type_id' => 'required|exists:hki_types,id',
+      'publication_country' => 'required|string|max:2',
+      'publication_city' => 'required|string|max:255',
+      'publication_date' => 'required|date',
+      'description' => 'nullable|string',
+    ]);
+
+    try {
+      $proposal = $this->getProposal();
+
+      // Update proposal
+      $proposal->update([
+        'title' => $validated['title'],
+        'hki_type_id' => $validated['hki_type_id'],
+        'publication_country' => $validated['publication_country'],
+        'publication_city' => $validated['publication_city'],
+        'publication_date' => $validated['publication_date'],
+        'description' => $validated['description'],
+      ]);
+
+      // Update status back to SUBMITTED
+      $proposal->update(['status' => 'SUBMITTED']);
+
+      // Create audit log
+      \App\Models\HKIAuditLog::create([
+        'model_type' => HKIProposal::class,
+        'model_id' => $proposal->id,
+        'user_id' => Auth::id(),
+        'action' => 'RESUBMIT_PROPOSAL',
+        'payload' => [
+          'message' => 'Proposal direvisi dan diajukan kembali',
+          'timestamp' => now()->format('Y-m-d H:i:s')
+        ],
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+      ]);
+
+      $this->isEditMode = false;
+
+      session()->flash('success', 'Proposal berhasil direvisi dan diajukan kembali.');
+
+    } catch (\Exception $e) {
+      session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+  }
+
+  public function submitReview()
   {
     if (!Gate::allows('review-hki')) {
       abort(403, 'Anda tidak memiliki akses sebagai Reviewer.');
     }
 
-    $this->reviewAction = $action;
-    $this->showReviewModal = true;
-    $this->reset(['reviewNote', 'pin']);
-  }
+    // Validation rules
+    $rules = [
+      'reviewDecision' => 'required|in:approved,rejected,revision',
+    ];
 
-  public function submitReview(AuditLogService $auditService)
-  {
-    $this->validate([
-      'reviewNote' => 'required|string|min:5',
-      'pin' => 'required|digits:6',
-    ]);
+    // Notes required for rejection and revision
+    if (in_array($this->reviewDecision, ['rejected', 'revision'])) {
+      $rules['reviewNotes'] = 'required|string|min:10';
+    }
 
-    $newStatus = ($this->reviewAction === 'APPROVE') ? 'APPROVED' : 'REJECTED';
-    $logAction = ($this->reviewAction === 'APPROVE') ? 'APPROVE_PROPOSAL' : 'REJECT_PROPOSAL';
+    $this->validate($rules);
 
     try {
-      $this->proposal->status = $newStatus;
+      $proposal = $this->getProposal();
 
-      $this->proposal->save();
+      // Create review record
+      \App\Models\HKIReview::create([
+        'hki_proposal_id' => $proposal->id,
+        'reviewer_id' => Auth::id(),
+        'review_notes' => $this->reviewNotes,
+        'decision' => $this->reviewDecision,
+        'reviewed_at' => now(),
+      ]);
 
-      $request = new LogActivityRequest();
-      $request->user = Auth::user();
-      $request->action = $logAction;
-      $request->modelType = $this->proposal;
-      $request->modelId = $this->proposal->id;
-
-      $request->payload = [
-        'decision' => $newStatus,
-        'note' => $this->reviewNote,
-        'reviewer_name' => Auth::user()->name,
-        'timestamp' => now()->format('Y-m-d H:i:s')
+      // Update proposal status based on decision
+      $statusMap = [
+        'approved' => 'APPROVED',
+        'rejected' => 'REJECTED',
+        'revision' => 'REVISION',
       ];
 
+      $proposal->update([
+        'status' => $statusMap[$this->reviewDecision]
+      ]);
 
-      $request->pin = trim((string) $this->pin);
-
-      $auditService->logActivity($request);
+      // Create audit log
+      \App\Models\HKIAuditLog::create([
+        'model_type' => HKIProposal::class,
+        'model_id' => $proposal->id,
+        'user_id' => Auth::id(),
+        'action' => strtoupper($this->reviewDecision) . '_PROPOSAL',
+        'payload' => [
+          'decision' => $this->reviewDecision,
+          'notes' => $this->reviewNotes,
+          'reviewer_name' => Auth::user()->name,
+          'timestamp' => now()->format('Y-m-d H:i:s')
+        ],
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+      ]);
 
       $this->showReviewModal = false;
-      session()->flash('success', "Proposal berhasil di-{$this->reviewAction}.");
+      $this->reset(['reviewDecision', 'reviewNotes']);
 
-      return redirect()->route('hki.reviewer.inbox');
+      session()->flash('success', 'Review berhasil disimpan.');
 
     } catch (\Exception $e) {
-      $this->addError('pin', $e->getMessage());
+      session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
   }
 
   public function render()
   {
-    return view('livewire.hki.proposal.detail');
-  }
+    $proposal = $this->getProposal();
 
-  public function getCountryName($code)
-  {
-    $countries = \App\Helpers\Countries::countries();
-    return $countries[$code] ?? 'Tidak Diketahui';
+    return view('livewire.hki.proposal.detail', [
+      'proposal' => $proposal,
+    ]);
   }
 }

@@ -97,7 +97,16 @@
 
                   {{-- 3. Kepengarangan --}}
                   <div class="border-t border-gray-200 pt-6">
-                      <h3 class="text-lg font-medium text-gray-900 mb-4">Kepengarangan</h3>
+                      <h3 class="text-lg font-medium text-gray-900 mb-4">
+                          Kepengarangan <span class="text-red-500">*</span>
+                      </h3>
+                      
+                      @error('authors')
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <p class="text-sm text-red-800 font-medium">{{ $message }}</p>
+                            <p class="text-xs text-red-600 mt-1">Tambahkan minimal 1 penulis/kontributor untuk melanjutkan.</p>
+                        </div>
+                      @enderror
                       
                       {{-- Existing Authors List --}}
                       @if(count($authors) > 0)
@@ -439,133 +448,8 @@
               </div>
             @endif
 
-            {{-- Step 3: Kepengarangan --}}
+            {{-- Step 3: Upload Files --}}
             @if($currentStep === 3)
-              <div class="space-y-6">
-                  {{-- Existing Authors List --}}
-                  @if(count($authors) > 0)
-                    <div class="space-y-3">
-                        <h3 class="text-sm font-medium text-gray-900">Daftar Kontributor</h3>
-                        @foreach($authors as $index => $author)
-                          <div class="p-4 border border-gray-200 rounded-lg">
-                              <div class="flex items-start justify-between">
-                                  <div class="flex-1">
-                                      <div class="flex items-center gap-2">
-                                          <h4 class="text-sm font-medium text-gray-900">{{ $author['name'] }}</h4>
-                                          <span class="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 rounded">
-                                              {{ ucfirst(strtolower(str_replace('_', ' ', $author['role_category']))) }}
-                                          </span>
-                                          @if($author['is_corresponding'])
-                                            <span class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                                                Korespondensi
-                                            </span>
-                                          @endif
-                                      </div>
-                                      <p class="text-sm text-gray-600 mt-1">{{ $author['email'] }}</p>
-                                      <p class="text-sm text-gray-600">{{ $author['affiliation'] }}</p>
-                                      @if(!empty($author['nidn_nip']))
-                                        <p class="text-sm text-gray-600">NIDN/NIP: {{ $author['nidn_nip'] }}</p>
-                                      @endif
-                                  </div>
-                                  <div class="flex items-center gap-2">
-                                      @if(!$author['is_corresponding'])
-                                        <button type="button" wire:click="setCorresponding({{ $index }})"
-                                                class="text-sm text-blue-800 hover:text-blue-900">
-                                            Jadikan Korespondensi
-                                        </button>
-                                      @endif
-                                      <button type="button" wire:click="removeAuthor({{ $index }})"
-                                              class="text-red-600 hover:text-red-800">
-                                          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                                          </svg>
-                                      </button>
-                                  </div>
-                              </div>
-                          </div>
-                        @endforeach
-                    </div>
-                  @endif
-
-                  {{-- Add New Author Form --}}
-                  <div class="border-t border-gray-200 pt-6">
-                      <h3 class="text-sm font-medium text-gray-900 mb-4">Tambah Kontributor</h3>
-                      <div class="space-y-4">
-                          <div>
-                              <label for="newAuthorRoleCategory" class="block text-sm font-medium text-gray-700 mb-1">
-                                  Peran <span class="text-red-500">*</span>
-                              </label>
-                              <select id="newAuthorRoleCategory" wire:model="newAuthorRoleCategory" 
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent">
-                                  <option value="PENULIS">Penulis</option>
-                                  <option value="KOMIKUS">Komikus</option>
-                                  <option value="PENERJEMAH">Penerjemah</option>
-                                  <option value="ILUSTRATOR">Ilustrator</option>
-                                  <option value="EDITOR">Editor</option>
-                                  <option value="MURAJAAH">Murajaah</option>
-                                  <option value="REVIEWER">Reviewer</option>
-                                  <option value="FOTOGRAFER">Fotografer</option>
-                              </select>
-                          </div>
-
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                  <label for="newAuthorName" class="block text-sm font-medium text-gray-700 mb-1">
-                                      Nama Lengkap <span class="text-red-500">*</span>
-                                  </label>
-                                  <input type="text" id="newAuthorName" wire:model="newAuthorName" 
-                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                         placeholder="Nama lengkap">
-                                  @error('newAuthorName') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                              </div>
-
-                              <div>
-                                  <label for="newAuthorEmail" class="block text-sm font-medium text-gray-700 mb-1">
-                                      Email <span class="text-red-500">*</span>
-                                  </label>
-                                  <input type="email" id="newAuthorEmail" wire:model="newAuthorEmail" 
-                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                         placeholder="email@example.com">
-                                  @error('newAuthorEmail') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                              </div>
-                          </div>
-
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                  <label for="newAuthorAffiliation" class="block text-sm font-medium text-gray-700 mb-1">
-                                      Afiliasi <span class="text-red-500">*</span>
-                                  </label>
-                                  <input type="text" id="newAuthorAffiliation" wire:model="newAuthorAffiliation" 
-                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                  @error('newAuthorAffiliation') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                              </div>
-
-                              <div>
-                                  <label for="newAuthorNidn" class="block text-sm font-medium text-gray-700 mb-1">
-                                      NIDN/NIP (Opsional)
-                                  </label>
-                                  <input type="text" id="newAuthorNidn" wire:model="newAuthorNidn" 
-                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:border-transparent"
-                                         placeholder="NIDN atau NIP">
-                              </div>
-                          </div>
-
-                          <button type="button" wire:click="addAuthor"
-                                  class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200">
-                              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                              </svg>
-                              Tambah Kontributor
-                          </button>
-                      </div>
-                  </div>
-
-                  @error('authors') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-              </div>
-            @endif
-
-            {{-- Step 4: Upload Files --}}
-            @if($currentStep === 4)
               <div class="space-y-6">
                   <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                       <p class="text-sm text-blue-800">

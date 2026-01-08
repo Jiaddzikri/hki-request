@@ -221,7 +221,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                   <div class="flex items-center space-x-2">
                     <button wire:click="viewDetail({{ $submission->id }})"
-                      class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors duration-200">
+                      class="inline-flex items-center px-3 py-1.5 bg-blue-800 text-white rounded-lg text-xs font-bold hover:bg-blue-900 transition-colors duration-200">
                       <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
                         </path>
@@ -283,7 +283,7 @@
       <p class="mt-2 text-sm text-gray-600">Mulai dengan membuat submission baru.</p>
       <div class="mt-6">
         <a href="{{ route('letter.create') }}"
-          class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold text-sm shadow-md hover:bg-blue-700 transition-all duration-200">
+          class="inline-flex items-center px-6 py-3 bg-blue-800 text-white rounded-lg font-semibold text-sm shadow-md hover:bg-blue-900 transition-all duration-200">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
@@ -337,13 +337,13 @@
             {{-- Kategori & Unit --}}
             <div class="grid grid-cols-2 gap-6">
               <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                <label class="block text-xs font-bold text-blue-900 mb-2 uppercase tracking-wide">Kategori</label>
+                <label class="block text-xs font-bold text-blue-800 mb-2 uppercase tracking-wide">Kategori</label>
                 <p class="text-sm font-semibold text-gray-900">
                   {{ $selectedSubmission->category->category ?? 'Tidak ada kategori' }}
                 </p>
               </div>
-              <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                <label class="block text-xs font-bold text-purple-900 mb-2 uppercase tracking-wide">Unit Kerja</label>
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                <label class="block text-xs font-bold text-blue-800 mb-2 uppercase tracking-wide">Unit Kerja</label>
                 <p class="text-sm font-semibold text-gray-900">
                   {{ $selectedSubmission->unit->unit ?? 'Tidak ada unit' }}
                 </p>
@@ -358,8 +358,8 @@
             </div>
 
             {{-- Indikator --}}
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-              <label class="block text-xs font-bold text-green-900 mb-3 uppercase tracking-wide">Indikator</label>
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+              <label class="block text-xs font-bold text-blue-800 mb-3 uppercase tracking-wide">Indikator</label>
               <div class="flex flex-wrap gap-2">
                 @php
                   $indicators = $selectedSubmission->indicators ? array_filter(array_map('trim', explode(',', $selectedSubmission->indicators))) : [];
@@ -367,8 +367,8 @@
                 @if(count($indicators) > 0)
                   @foreach($indicators as $indicator)
                     <span
-                      class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white text-green-800 text-sm font-medium border border-green-300 shadow-sm">
-                      <svg class="w-4 h-4 mr-1.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white text-blue-800 text-sm font-medium border border-blue-300 shadow-sm">
+                      <svg class="w-4 h-4 mr-1.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                           clip-rule="evenodd"></path>
@@ -383,8 +383,8 @@
             </div>
 
             {{-- Anggaran --}}
-            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
-              <label class="block text-xs font-bold text-yellow-900 mb-2 uppercase tracking-wide">Anggaran</label>
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue -200">
+              <label class="block text-xs font-bold text-blue-800 mb-2 uppercase tracking-wide">Anggaran</label>
               <p class="text-lg font-bold text-gray-900">
                 @if($selectedSubmission->budget)
                   Rp {{ number_format($selectedSubmission->budget, 0, ',', '.') }}
@@ -396,10 +396,10 @@
 
             {{-- Periode --}}
             <div class="grid grid-cols-2 gap-6">
-              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                <label class="block text-xs font-bold text-green-900 mb-2 uppercase tracking-wide">Tanggal Mulai</label>
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                <label class="block text-xs font-bold text-blue-800 mb-2 uppercase tracking-wide">Tanggal Mulai</label>
                 <div class="flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                       d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
                       clip-rule="evenodd"></path>
@@ -426,11 +426,11 @@
 
             {{-- URL Dokumentasi --}}
             @if($selectedSubmission->url_documentation)
-              <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-4 border border-indigo-200">
-                <label class="block text-xs font-bold text-indigo-900 mb-2 uppercase tracking-wide">URL
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                <label class="block text-xs font-bold text-blue-800 mb-2 uppercase tracking-wide">URL
                   Dokumentasi</label>
                 <a href="{{ $selectedSubmission->url_documentation }}" target="_blank"
-                  class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                  class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
                   <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>

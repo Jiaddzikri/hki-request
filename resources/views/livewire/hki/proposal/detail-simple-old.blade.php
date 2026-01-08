@@ -47,37 +47,7 @@
         <p class="text-sm text-gray-600">{{ $proposal->title }}</p>
       </div>
       <div class="flex items-center gap-3">
-        @if($proposal->status === 'REVISION' && !$isEditMode)
-          <button wire:click="enableEditMode"
-            class="inline-flex items-center px-4 py-2 bg-blue-800 text-white text-sm font-medium rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Mulai Revisi
-          </button>
-        @endif
-
-        @if($isEditMode)
-          <button wire:click="saveRevision"
-            class="inline-flex items-center px-4 py-2 bg-blue-800 text-white text-sm font-medium rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M5 13l4 4L19 7" />
-            </svg>
-            Simpan & Ajukan Ulang
-          </button>
-          <button wire:click="cancelEdit"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Batal
-          </button>
-        @endif
-
-        <a href="{{ route('hki.list') }}" wire:navigate class="text-sm text-gray-600 hover:text-gray-900">
+        <a href="{{ route('hki.list') }}" class="text-sm text-gray-600 hover:text-gray-900">
           ← Kembali
         </a>
       </div>
@@ -165,31 +135,6 @@
     </div>
   @endif
 
-  {{-- Reviewer Panel --}}
-  @can('review-hki')
-    @if($proposal->status === 'SUBMITTED')
-      <div class="mb-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-900">Panel Reviewer</h3>
-          <p class="text-sm text-gray-600 mt-1">Validasi dan Evaluasi Dokumen Pengajuan HKI</p>
-        </div>
-        <div class="px-6 py-4">
-          <p class="text-sm text-gray-700 mb-4">Silakan melakukan review terhadap kelengkapan dokumen dan berikan keputusan:</p>
-          <div class="flex flex-wrap gap-3">
-            <button wire:click="$set('showReviewModal', true)" type="button"
-              class="inline-flex items-center px-4 py-2 bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-900">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-              </svg>
-              Berikan Review
-            </button>
-          </div>
-        </div>
-      </div>
-    @endif
-  @endcan
-
   {{-- Informasi Dasar --}}
   <div class="mb-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
@@ -199,69 +144,27 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Judul Proposal</dt>
-          @if($isEditMode)
-            <input type="text" wire:model="title" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Masukkan judul proposal">
-            @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm font-semibold text-gray-900">{{ $proposal->title }}</dd>
-          @endif
+          <dd class="text-sm font-semibold text-gray-900">{{ $proposal->title }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Kategori HKI</dt>
-          @if($isEditMode)
-            <select wire:model="hki_type_id" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-              <option value="">Pilih Kategori</option>
-              @foreach(\App\Models\HKIType::all() as $type)
-                <option value="{{ $type->id }}">{{ $type->name }}</option>
-              @endforeach
-            </select>
-            @error('hki_type_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm font-semibold text-blue-800">{{ $proposal->type->name ?? 'Tidak Diketahui' }}</dd>
-          @endif
+          <dd class="text-sm font-semibold text-blue-800">{{ $proposal->type->name ?? 'Tidak Diketahui' }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Negara Pertama kali diumumkan</dt>
-          @if($isEditMode)
-            <select wire:model="publication_country" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-              <option value="">Pilih Negara</option>
-              @foreach(\App\Helpers\Countries::countries() as $code => $name)
-                <option value="{{ $code }}">{{ $name }}</option>
-              @endforeach
-            </select>
-            @error('publication_country') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm font-semibold text-gray-900">
-              {{ $proposal->publication_country ? \App\Helpers\Countries::getCountryName($proposal->publication_country) : 'Tidak Diketahui' }}
-            </dd>
-          @endif
+          <dd class="text-sm font-semibold text-gray-900">
+            {{ $proposal->publication_country ? \App\Helpers\Countries::getCountryName($proposal->publication_country) : 'Tidak Diketahui' }}
+          </dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Kota Pertama kali diumumkan</dt>
-          @if($isEditMode)
-            <input type="text" wire:model="publication_city" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Masukkan kota">
-            @error('publication_city') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm font-semibold text-gray-900">{{ $proposal->publication_city ?? 'Tidak Diketahui' }}</dd>
-          @endif
+          <dd class="text-sm font-semibold text-gray-900">{{ $proposal->publication_city ?? 'Tidak Diketahui' }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Tanggal Pertama kali diumumkan</dt>
-          @if($isEditMode)
-            <input type="date" wire:model="publication_date" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-            @error('publication_date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm font-semibold text-gray-900">
-              {{ $proposal->publication_date ? \Carbon\Carbon::parse($proposal->publication_date)->format('d F Y') : 'Tidak Diketahui' }}
-            </dd>
-          @endif
+          <dd class="text-sm font-semibold text-gray-900">
+            {{ $proposal->publication_date ? \Carbon\Carbon::parse($proposal->publication_date)->format('d F Y') : 'Tidak Diketahui' }}
+          </dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pengusul Utama</dt>
@@ -269,17 +172,10 @@
         </div>
       </div>
 
-      @if($proposal->description || $isEditMode)
+      @if($proposal->description)
         <div class="mt-4 pt-4 border-t border-gray-200">
           <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Deskripsi Proposal</dt>
-          @if($isEditMode)
-            <textarea wire:model="description" rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Masukkan deskripsi proposal"></textarea>
-            @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-          @else
-            <dd class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $proposal->description }}</dd>
-          @endif
+          <dd class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $proposal->description }}</dd>
         </div>
       @endif
     </div>
@@ -523,119 +419,5 @@
         </div>
       </div>
     </div>
-
-  {{-- Review Modal --}}
-  @if($showReviewModal)
-  <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <!-- Background overlay -->
-      <div class="fixed inset-0 bg-gray-900/50 bg-opacity-75 transition-opacity backdrop-blur-sm"
-        wire:click="$set('showReviewModal', false)" aria-hidden="true"></div>
-
-      <!-- This element is to trick the browser into centering the modal contents. -->
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-      <!-- Modal panel -->
-      <div
-        class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-        <div class="bg-blue-800 px-6 py-4">
-          <div class="flex items-center space-x-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-white">Review Proposal HKI</h3>
-          </div>
-        </div>
-
-        <div class="bg-white px-6 py-4">
-          <div class="space-y-4">
-            <!-- Decision Selection -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Keputusan Review <span class="text-red-600">*</span>
-              </label>
-              <div class="grid grid-cols-3 gap-2">
-                <button type="button" wire:click="$set('reviewDecision', 'approved')"
-                  class="px-4 py-2 text-sm font-medium rounded-lg border-2 transition-all {{ $reviewDecision === 'approved' ? 'bg-green-100 border-green-600 text-green-800' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50' }}">
-                  <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Setujui
-                </button>
-                <button type="button" wire:click="$set('reviewDecision', 'revision')"
-                  class="px-4 py-2 text-sm font-medium rounded-lg border-2 transition-all {{ $reviewDecision === 'revision' ? 'bg-orange-100 border-orange-600 text-orange-800' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50' }}">
-                  <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Revisi
-                </button>
-                <button type="button" wire:click="$set('reviewDecision', 'rejected')"
-                  class="px-4 py-2 text-sm font-medium rounded-lg border-2 transition-all {{ $reviewDecision === 'rejected' ? 'bg-red-100 border-red-600 text-red-800' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50' }}">
-                  <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Tolak
-                </button>
-              </div>
-              @error('reviewDecision')
-                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-              @enderror
-            </div>
-
-            <!-- Review Notes -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Catatan Reviewer 
-                @if($reviewDecision === 'revision' || $reviewDecision === 'rejected')
-                  <span class="text-red-600">*</span>
-                @endif
-              </label>
-              <textarea wire:model="reviewNotes" rows="4"
-                class="block w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
-                placeholder="{{ $reviewDecision === 'revision' ? 'Jelaskan bagian mana yang perlu diperbaiki...' : ($reviewDecision === 'rejected' ? 'Jelaskan alasan penolakan...' : 'Berikan catatan tambahan (opsional)...') }}"></textarea>
-              @error('reviewNotes')
-                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-              @enderror
-            </div>
-
-            @if($reviewDecision)
-              <div class="bg-{{ $reviewDecision === 'approved' ? 'green' : ($reviewDecision === 'revision' ? 'orange' : 'red') }}-50 border border-{{ $reviewDecision === 'approved' ? 'green' : ($reviewDecision === 'revision' ? 'orange' : 'red') }}-200 rounded-lg p-3">
-                <p class="text-xs text-{{ $reviewDecision === 'approved' ? 'green' : ($reviewDecision === 'revision' ? 'orange' : 'red') }}-800">
-                  @if($reviewDecision === 'approved')
-                    <strong>Persetujuan:</strong> Proposal akan disetujui dan status berubah menjadi APPROVED.
-                  @elseif($reviewDecision === 'revision')
-                    <strong>Perlu Revisi:</strong> Proposal akan dikembalikan ke pengusul untuk diperbaiki sesuai catatan.
-                  @else
-                    <strong>Penolakan:</strong> Proposal akan ditolak dan pengusul perlu mengajukan ulang.
-                  @endif
-                </p>
-              </div>
-            @endif
-          </div>
-        </div>
-
-        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
-          <button type="button" wire:click="$set('showReviewModal', false)"
-            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-            Batal
-          </button>
-          <button type="button" wire:click="submitReview" wire:loading.attr="disabled"
-            class="px-4 py-2 bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-900 disabled:opacity-50">
-            <span wire:loading.remove wire:target="submitReview">Simpan Review</span>
-            <span wire:loading wire:target="submitReview">Menyimpan...</span>
-          </button>
-        </div>
-      </div>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
-@endif
 </div>

@@ -1,10 +1,6 @@
 <div>
   <flux:navlist.group heading="Modul Sentra HKI">
 
-    <flux:navlist.item icon="home" href="{{ route('hki.dashboard') }}" :current="request()->routeIs('hki.dashboard')">
-      Dashboard HKI
-    </flux:navlist.item>
-
     <flux:navlist.item icon="list-bullet" href="{{ route('hki.list') }}" :current="request()->routeIs('hki.list')">
       Daftar Proposal
     </flux:navlist.item>
