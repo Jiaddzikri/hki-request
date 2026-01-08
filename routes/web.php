@@ -1,14 +1,8 @@
 <?php
 
-use App\Http\Controllers\GrantContractController;
 use App\Http\Controllers\Hki\CertificateController;
-use App\Http\Middleware\EnsureHasSecurityKeys;
 use App\Livewire\Auth\SetupSecurity;
 use App\Livewire\Letter\Create;
-use App\Livewire\Letter\LetterDetail;
-use App\Livewire\Letter\LetterList;
-use App\Livewire\Letter\LetterSubmission;
-use App\Livewire\Hki\Dashboard;
 use App\Livewire\Hki\Forensic\PublicVerifier;
 use App\Livewire\Hki\Proposal\Lists;
 use App\Livewire\Settings\Appearance;
@@ -76,9 +70,9 @@ Route::domain('lppm.com')->group(function () {
 */
 Route::domain('hki.lppm.com')->middleware(['auth', 'security-keys'])->group(function () {
 
-  Route::get('/', Dashboard::class)->name('hki.dashboard');
+  Route::get('/', Lists::class)->name('hki.dashboard'); // Redirect langsung ke list
   Route::get('/list', Lists::class)->name('hki.list');
-  Route::get('/proposal/{id}', \App\Livewire\Hki\Proposal\Detail::class)->name('hki.show');
+  Route::get('/proposal/{id}', \App\Livewire\Hki\Proposal\DetailSimple::class)->name('hki.show');
   Route::get('/create', \App\Livewire\Hki\Proposal\Create::class)->name('hki.create');
   Route::get('/setup-security', SetupSecurity::class)
     ->name('setup.security');

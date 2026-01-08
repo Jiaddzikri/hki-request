@@ -9,8 +9,10 @@
   <flux:sidebar sticky stashable class="border-e-2 border-blue-800 bg-white">
     <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-    <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse mb-6" wire:navigate>
-      <x-app-logo />
+    <a href="{{ route('dashboard') }}" class="me-5 flex justify-center items-center space-x-2 rtl:space-x-reverse mb-6"
+      wire:navigate>
+      <img src="/unsap-1.png" alt="Logo Universitas Sebelas April" class="w-10 h-auto">
+      <p class="text-sm font-semibold">LPPM UNSAP</p>
     </a>
 
     <flux:navlist variant="outline">
@@ -38,9 +40,9 @@
             Ajukan HKI Baru
           </flux:navlist.item>
 
-          <flux:navlist.item icon="archive-box" href="{{ route('hki.dashboard') }}"
-            :current="request()->routeIs('hki.dashboard*')">
-            Arsip HKI Saya
+          <flux:navlist.item icon="archive-box" href="{{ route('hki.list') }}"
+            :current="request()->routeIs('hki.list')">
+            Daftar HKI Saya
           </flux:navlist.item>
         </flux:navlist.group>
 
