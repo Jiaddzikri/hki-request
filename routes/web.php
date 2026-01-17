@@ -95,10 +95,19 @@ Route::domain('surat.lppm.com')->middleware(['auth', 'security-keys'])->group(fu
   Route::get('/letter', \App\Livewire\Letter\Index::class)->name('letter.index');
   Route::get('/letter/create', Create::class)->name('letter.create');
 
+  // Assignment Request Routes
+  Route::get('/assignment', \App\Livewire\Letter\Assignment\Index::class)->name('letter.assignment.index');
+  Route::get('/assignment/create', \App\Livewire\Letter\Assignment\Create::class)->name('letter.assignment.create');
+
   // Reviewer routes - only accessible by users with 'reviewer' or 'super-admin' role
   Route::middleware(['role:reviewer|super-admin'])->group(function () {
     Route::get('/letter/reviewer', \App\Livewire\Letter\ReviewerInbox::class)->name('letter.reviewer');
+    Route::get('/assignment/reviewer', \App\Livewire\Letter\Assignment\ReviewerInbox::class)->name('letter.assignment.reviewer.inbox');
+    Route::get('/assignment/reviewer/{id}', \App\Livewire\Letter\Assignment\Review::class)->name('letter.assignment.review');
   });
+
+  Route::get('/assignment/{id}', \App\Livewire\Letter\Assignment\Detail::class)->name('letter.assignment.detail');
+  Route::get('/assignment/{id}/edit', \App\Livewire\Letter\Assignment\Edit::class)->name('letter.assignment.edit');
 
 });
 
