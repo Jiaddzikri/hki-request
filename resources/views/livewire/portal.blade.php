@@ -169,7 +169,7 @@
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
           {{-- Surat Tugas Card --}}
-          <a href="{{ route('letter.index') }}"
+          <a href="{{ route('letter.assignment.index') }}"
             class="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 overflow-hidden">
             <div class="p-6">
               <div
