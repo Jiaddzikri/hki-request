@@ -155,13 +155,11 @@ class Detail extends Component
       return;
     }
 
-    // Check ownership
     if ($this->assignment->user_id !== auth()->id()) {
       session()->flash('error', 'Anda tidak memiliki akses untuk menghapus ajuan ini.');
       return;
     }
 
-    // Delete associated file if exists
     if ($this->assignment->report_file_path && \Storage::disk('public')->exists($this->assignment->report_file_path)) {
       \Storage::disk('public')->delete($this->assignment->report_file_path);
     }
@@ -173,13 +171,12 @@ class Detail extends Component
 
   public function submitForReview()
   {
-    // Only allow submit if status is DRAFT
     if ($this->assignment->status !== 'DRAFT') {
       session()->flash('error', 'Hanya ajuan dengan status DRAFT yang bisa disubmit.');
       return;
     }
 
-    // Check ownership
+
     if ($this->assignment->user_id !== auth()->id()) {
       session()->flash('error', 'Anda tidak memiliki akses untuk submit ajuan ini.');
       return;

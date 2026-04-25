@@ -37,6 +37,7 @@ class Review extends Component
     ]);
 
     try {
+      // Update or create review
       LtrAssignmentReview::updateOrCreate(
         ['assignment_request_id' => $this->assignment->id],
         [
@@ -47,10 +48,21 @@ class Review extends Component
         ]
       );
 
-      $this->assignment->update([
+      // Prepare update data
+      $updateData = [
         'status' => $this->decision,
         'reviewed_at' => now(),
-      ]);
+      ];
+
+      // Generate letter number if APPROVED and doesn't have one yet
+      if ($this->decision === 'APPROVED' && empty($this->assignment->letter_number)) {
+        $updateData['letter_number'] = LtrAssignmentRequest::generateLetterNumber();
+      }
+
+      // Update assignment
+      $this->assignment->update($updateData);
+
+      // TODO: Send notification to user (email, etc.)
 
       session()->flash('success', 'Review berhasil disubmit. Status ajuan: ' . $this->decision);
       return redirect()->route('letter.assignment.reviewer.inbox');

@@ -90,6 +90,15 @@
           Lihat Catatan Review
         </button>
       @endif
+      @if($assignment->status === 'APPROVED')
+        <a href="{{ route('letter.assignment.download', $assignment->id) }}" 
+           class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Unduh Surat Penugasan
+        </a>
+        @endif
       @if($assignment->status === 'REVISION' && !$isEditMode)
         <button wire:click="enableEditMode" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -583,6 +592,12 @@
             <dt class="text-xs font-medium text-gray-600 uppercase tracking-wider">ID Pengajuan</dt>
             <dd class="mt-1 text-sm text-gray-900 font-mono">{{ substr($assignment->id, 0, 8) }}...</dd>
           </div>
+          @if($assignment->letter_number)
+          <div>
+            <dt class="text-xs font-medium text-gray-600 uppercase tracking-wider">Nomor Surat</dt>
+            <dd class="mt-1 text-sm text-gray-900 font-semibold font-mono">{{ $assignment->letter_number }}</dd>
+          </div>
+          @endif
           <div>
             <dt class="text-xs font-medium text-gray-600 uppercase tracking-wider">Pengaju</dt>
             <dd class="mt-1 text-sm text-gray-900">{{ $assignment->user->name }}</dd>

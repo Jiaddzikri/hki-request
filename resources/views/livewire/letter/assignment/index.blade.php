@@ -53,6 +53,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Periode</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Anggota</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. Surat</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
               </tr>
             </thead>
@@ -60,11 +61,12 @@
               @foreach ($assignments as $assignment)
                 <tr>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs font-medium rounded 
-                            {{ $assignment->assignment_type === 'penelitian' ? 'bg-purple-100 text-purple-800' : '' }}
-                            {{ $assignment->assignment_type === 'pkm' ? 'bg-green-100 text-green-800' : '' }}
-                            {{ $assignment->assignment_type === 'penunjang' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                            {{ $assignment->assignment_type === 'seminar_workshop' ? 'bg-blue-100 text-blue-800' : '' }}">
+                    <span
+                      class="px-2 py-1 text-xs font-medium rounded 
+                                {{ $assignment->assignment_type === 'penelitian' ? 'bg-purple-100 text-purple-800' : '' }}
+                                {{ $assignment->assignment_type === 'pkm' ? 'bg-green-100 text-green-800' : '' }}
+                                {{ $assignment->assignment_type === 'penunjang' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                {{ $assignment->assignment_type === 'seminar_workshop' ? 'bg-blue-100 text-blue-800' : '' }}">
                       {{ ucwords(str_replace('_', ' ', $assignment->assignment_type)) }}
                     </span>
                   </td>
@@ -85,17 +87,25 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 py-1 text-xs font-semibold rounded 
-                            {{ $assignment->status === 'DRAFT' ? 'bg-gray-100 text-gray-800' : '' }}
-                            {{ $assignment->status === 'SUBMITTED' ? 'bg-blue-100 text-blue-800' : '' }}
-                            {{ $assignment->status === 'APPROVED' ? 'bg-green-100 text-green-800' : '' }}
-                            {{ $assignment->status === 'REJECTED' ? 'bg-red-100 text-red-800' : '' }}
-                            {{ $assignment->status === 'REVISION' ? 'bg-orange-100 text-orange-800' : '' }}">
+                                {{ $assignment->status === 'DRAFT' ? 'bg-gray-100 text-gray-800' : '' }}
+                                {{ $assignment->status === 'SUBMITTED' ? 'bg-blue-100 text-blue-800' : '' }}
+                                {{ $assignment->status === 'APPROVED' ? 'bg-green-100 text-green-800' : '' }}
+                                {{ $assignment->status === 'REJECTED' ? 'bg-red-100 text-red-800' : '' }}
+                                {{ $assignment->status === 'REVISION' ? 'bg-orange-100 text-orange-800' : '' }}">
                       {{ $assignment->status }}
                     </span>
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    @if($assignment->letter_number)
+                      <div class="text-xs font-mono text-gray-900">{{ $assignment->letter_number }}</div>
+                    @else
+                      <span class="text-xs text-gray-400">-</span>
+                    @endif
+                  </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <div class="flex gap-2">
-                      <a href="{{ route('letter.assignment.detail', $assignment->id) }}" class="text-blue-600 hover:text-blue-800">Detail</a>
+                      <a href="{{ route('letter.assignment.detail', $assignment->id) }}"
+                        class="text-blue-600 hover:text-blue-800">Detail</a>
                       @if ($assignment->status === 'DRAFT')
                         <button wire:click="deleteAssignment('{{ $assignment->id }}')" wire:confirm="Yakin ingin menghapus?"
                           class="text-red-600 hover:text-red-800">
