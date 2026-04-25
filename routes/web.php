@@ -106,6 +106,7 @@ Route::domain('surat.lppm.com')->middleware(['auth', 'security-keys'])->group(fu
     Route::get('/assignment/reviewer/{id}', \App\Livewire\Letter\Assignment\Review::class)->name('letter.assignment.review');
   });
 
+  Route::get('/letter/assignment/download/{id}', [\App\Http\Controllers\LetterAssigmentController::class, 'download'])->name('letter.assignment.download');
   Route::get('/assignment/{id}', \App\Livewire\Letter\Assignment\Detail::class)->name('letter.assignment.detail');
   Route::get('/assignment/{id}/edit', \App\Livewire\Letter\Assignment\Edit::class)->name('letter.assignment.edit');
 

@@ -34,6 +34,7 @@ class LtrAssignmentRequest extends Model
     'report_file_path',
     'publication_link',
     'status',
+    'letter_number',
     'submitted_at',
     'reviewed_at',
   ];
@@ -46,6 +47,7 @@ class LtrAssignmentRequest extends Model
     'submitted_at' => 'datetime',
     'reviewed_at' => 'datetime',
   ];
+
 
   public function user(): BelongsTo
   {
@@ -61,4 +63,57 @@ class LtrAssignmentRequest extends Model
   {
     return $this->hasOne(LtrAssignmentReview::class, 'assignment_request_id');
   }
+
+  /**
+   * Generate nomor surat otomatis
+   * Format: 309/A/LPPM-UNSAP/XII/2025
+   */
+  public static function generateLetterNumber(): string
+  {
+    // Get current year and month in Roman numerals
+    $year = now()->format('Y');
+    $month = self::getRomanMonth(now()->month);
+
+    // Get last number for this month
+    $lastLetter = self::whereYear('created_at', now()->year)
+      ->whereMonth('created_at', now()->month)
+      ->whereNotNull('letter_number')
+      ->orderBy('created_at', 'desc')
+      ->first();
+
+    $number = 1;
+    if ($lastLetter && $lastLetter->letter_number) {
+      // Extract number from format: 309/A/LPPM-UNSAP/XII/2025
+      preg_match('/^(\d+)\//', $lastLetter->letter_number, $matches);
+      if (isset($matches[1])) {
+        $number = intval($matches[1]) + 1;
+      }
+    }
+
+    return sprintf('%d/A/LPPM-UNSAP/%s/%s', $number, $month, $year);
+  }
+
+  /**
+   * Convert month number to Roman numerals
+   */
+  private static function getRomanMonth(int $month): string
+  {
+    $romans = [
+      1 => 'I',
+      2 => 'II',
+      3 => 'III',
+      4 => 'IV',
+      5 => 'V',
+      6 => 'VI',
+      7 => 'VII',
+      8 => 'VIII',
+      9 => 'IX',
+      10 => 'X',
+      11 => 'XI',
+      12 => 'XII'
+    ];
+
+    return $romans[$month] ?? 'I';
+  }
 }
+

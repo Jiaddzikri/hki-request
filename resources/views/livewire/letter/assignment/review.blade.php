@@ -171,8 +171,8 @@
                   <td class="px-4 py-3 text-sm text-gray-900">{{ $member->nidn_nip_nim ?? '-' }}</td>
                   <td class="px-4 py-3 text-sm text-gray-900">{{ $member->faculty ?? '-' }}</td>
 
-                    <td class="px-4 py-3 text-sm">
-                     @if($member->academic_position)
+                  <td class="px-4 py-3 text-sm">
+                    @if($member->academic_position)
                       @php
                         $positions = is_array($member->academic_position) ? $member->academic_position : json_decode($member->academic_position ?? '[]', true);
                         $posLabels = ['asisten_ahli' => 'Asisten Ahli', 'lektor' => 'Lektor', 'lektor_kepala' => 'Lektor Kepala', 'guru_besar' => 'Guru Besar'];
@@ -257,6 +257,7 @@
                     class="rounded-full border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
                   <span class="ml-2 text-sm">
                     <span class="font-medium text-green-700">Approve</span> - Ajuan disetujui
+                    <span class="text-xs text-gray-500">(Nomor surat akan di-generate otomatis)</span>
                   </span>
                 </label>
                 <label class="flex items-center">
@@ -278,6 +279,22 @@
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
               @enderror
             </div>
+
+            @if($assignment->letter_number)
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-medium text-blue-900">Nomor Surat Sudah Dibuat</p>
+                    <p class="text-sm text-blue-700 font-mono mt-1">{{ $assignment->letter_number }}</p>
+                  </div>
+                </div>
+              </div>
+            @endif
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Review <span
