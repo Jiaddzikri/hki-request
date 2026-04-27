@@ -4,6 +4,7 @@ namespace App\Request\HKI;
 
 class DecryptPrivateKeyRequest
 {
-  public ?string $encryptedKey;
-  public ?string $pin;
+    public ?string $encryptedKey;
+
+    public ?string $pin;
 }

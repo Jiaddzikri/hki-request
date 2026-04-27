@@ -2,102 +2,107 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Livewire\WithPagination;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Spatie\Permission\Models\Role;
 
 #[Layout('components.layouts.app')]
 
 class RoleManagement extends Component
 {
-  use WithPagination, AuthorizesRequests;
+    use AuthorizesRequests, WithPagination;
 
-  public $search = '';
-  public $filterRole = '';
-  public $showModal = false;
-  public $selectedUser = null;
-  public $selectedRoles = [];
-  public $perPage = 10;
+    public $search = '';
 
-  protected $queryString = [
-    'search' => ['except' => ''],
-    'filterRole' => ['except' => ''],
-  ];
+    public $filterRole = '';
 
-  public function mount()
-  {
-    // Check if user is super-admin
-    $this->authorize('manage users');
-  }
+    public $showModal = false;
 
-  public function updatingSearch()
-  {
-    $this->resetPage();
-  }
+    public $selectedUser = null;
 
-  public function updatingFilterRole()
-  {
-    $this->resetPage();
-  }
+    public $selectedRoles = [];
 
-  public function openRoleModal($userId)
-  {
-    $this->selectedUser = User::with('roles')->findOrFail($userId);
-    $this->selectedRoles = $this->selectedUser->roles->pluck('name')->toArray();
-    $this->showModal = true;
-  }
+    public $perPage = 10;
 
-  public function closeModal()
-  {
-    $this->showModal = false;
-    $this->selectedUser = null;
-    $this->selectedRoles = [];
-  }
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'filterRole' => ['except' => ''],
+    ];
 
-  public function updateRoles()
-  {
-    $this->authorize('manage users');
-
-    if (!$this->selectedUser) {
-      session()->flash('error', 'User tidak ditemukan.');
-      return;
+    public function mount()
+    {
+        // Check if user is super-admin
+        $this->authorize('manage users');
     }
 
-    // Sync roles
-    $this->selectedUser->syncRoles($this->selectedRoles);
-
-    session()->flash('success', 'Role user berhasil diupdate!');
-    $this->closeModal();
-  }
-
-  public function render()
-  {
-    $query = User::with('roles');
-
-    if ($this->search) {
-      $query->where(function ($q) {
-        $q->where('name', 'like', '%' . $this->search . '%')
-          ->orWhere('email', 'like', '%' . $this->search . '%')
-          ->orWhere('nidn', 'like', '%' . $this->search . '%');
-      });
+    public function updatingSearch()
+    {
+        $this->resetPage();
     }
 
-    if ($this->filterRole) {
-      $query->whereHas('roles', function ($q) {
-        $q->where('name', $this->filterRole);
-      });
+    public function updatingFilterRole()
+    {
+        $this->resetPage();
     }
 
-    $users = $query->latest()->paginate($this->perPage);
-    $allRoles = Role::all();
+    public function openRoleModal($userId)
+    {
+        $this->selectedUser = User::with('roles')->findOrFail($userId);
+        $this->selectedRoles = $this->selectedUser->roles->pluck('name')->toArray();
+        $this->showModal = true;
+    }
 
-    return view('livewire.admin.role-management', [
-      'users' => $users,
-      'allRoles' => $allRoles,
-    ]);
-  }
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->selectedUser = null;
+        $this->selectedRoles = [];
+    }
+
+    public function updateRoles()
+    {
+        $this->authorize('manage users');
+
+        if (! $this->selectedUser) {
+            session()->flash('error', 'User tidak ditemukan.');
+
+            return;
+        }
+
+        // Sync roles
+        $this->selectedUser->syncRoles($this->selectedRoles);
+
+        session()->flash('success', 'Role user berhasil diupdate!');
+        $this->closeModal();
+    }
+
+    public function render()
+    {
+        $query = User::with('roles');
+
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('nidn', 'like', '%'.$this->search.'%');
+            });
+        }
+
+        if ($this->filterRole) {
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', $this->filterRole);
+            });
+        }
+
+        $users = $query->latest()->paginate($this->perPage);
+        $allRoles = Role::all();
+
+        return view('livewire.admin.role-management', [
+            'users' => $users,
+            'allRoles' => $allRoles,
+        ]);
+    }
 }

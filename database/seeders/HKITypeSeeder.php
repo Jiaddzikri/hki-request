@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\HKIType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class HKITypeSeeder extends Seeder
@@ -16,11 +15,11 @@ class HKITypeSeeder extends Seeder
         try {
             HkiType::query()->delete();
         } catch (\Exception $e) {
-         
+
         }
         $musik = HkiType::create([
             'name' => 'Karya Rekaman Suara / Musik',
-            'requires_claims' => false
+            'requires_claims' => false,
         ]);
 
         $musik->children()->createMany([
@@ -34,7 +33,7 @@ class HKITypeSeeder extends Seeder
 
         $tulis = HkiType::create([
             'name' => 'Karya Tulis',
-            'requires_claims' => false
+            'requires_claims' => false,
         ]);
 
         $tulis->children()->createMany([
@@ -46,16 +45,16 @@ class HKITypeSeeder extends Seeder
 
         $paten = HkiType::create([
             'name' => 'Paten',
-            'requires_claims' => true
+            'requires_claims' => true,
         ]);
 
         $paten->children()->createMany([
             ['name' => 'Paten Biasa (Invensi Baru)', 'requires_claims' => true],
             ['name' => 'Paten Sederhana (Pengembangan)', 'requires_claims' => true],
         ]);
-        
+
         HkiType::create(['name' => 'Desain Industri', 'requires_claims' => false]);
         HKIType::create(['name' => 'Merek Dagang', 'requires_claims' => false]);
-    
+
     }
 }

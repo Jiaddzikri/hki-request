@@ -12,11 +12,11 @@ class EnsureHasSecurityKeys
     {
         $user = auth()->user();
         if ($user && empty($user->public_key)) {
-            if (!$request->routeIs('setup.security')) {
+            if (! $request->routeIs('setup.security')) {
                 return redirect()->route('setup.security');
             }
         }
-        if ($user && !empty($user->public_key) && $request->routeIs('setup.security')) {
+        if ($user && ! empty($user->public_key) && $request->routeIs('setup.security')) {
             return redirect()->route('dashboard');
         }
 

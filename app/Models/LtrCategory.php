@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LtrCategory extends Model
 {
-  protected $table = 'ltr_categories';
+    protected $table = 'ltr_categories';
 
-  protected $fillable = [
-    'category',
-  ];
+    protected $fillable = [
+        'category',
+    ];
 
-  /**
-   * Get all submissions for this category
-   */
-  public function submissions(): HasMany
-  {
-    return $this->hasMany(LtrSubmission::class, 'ltr_category_id');
-  }
+    /**
+     * Get all submissions for this category
+     */
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(LtrSubmission::class, 'ltr_category_id');
+    }
 }

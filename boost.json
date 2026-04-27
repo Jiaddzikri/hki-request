@@ -1,9 +1,11 @@
 {
     "agents": [
-        "gemini"
+        "copilot"
     ],
     "editors": [
         "vscode"
     ],
-    "guidelines": []
+    "guidelines": [
+        "laravel/fortify"
+    ]
 }

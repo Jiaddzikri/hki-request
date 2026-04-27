@@ -8,29 +8,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LtrAssignmentReview extends Model
 {
-  use HasUuids;
+    use HasUuids;
 
-  protected $table = 'ltr_assignment_reviews';
+    protected $table = 'ltr_assignment_reviews';
 
-  protected $fillable = [
-    'assignment_request_id',
-    'reviewer_id',
-    'decision',
-    'notes',
-    'reviewed_at',
-  ];
+    protected $fillable = [
+        'assignment_request_id',
+        'reviewer_id',
+        'decision',
+        'notes',
+        'reviewed_at',
+    ];
 
-  protected $casts = [
-    'reviewed_at' => 'datetime',
-  ];
+    protected $casts = [
+        'reviewed_at' => 'datetime',
+    ];
 
-  public function assignmentRequest(): BelongsTo
-  {
-    return $this->belongsTo(LtrAssignmentRequest::class, 'assignment_request_id');
-  }
+    public function assignmentRequest(): BelongsTo
+    {
+        return $this->belongsTo(LtrAssignmentRequest::class, 'assignment_request_id');
+    }
 
-  public function reviewer(): BelongsTo
-  {
-    return $this->belongsTo(User::class, 'reviewer_id');
-  }
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewer_id');
+    }
 }

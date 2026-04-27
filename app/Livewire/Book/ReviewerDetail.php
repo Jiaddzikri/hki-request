@@ -2,75 +2,78 @@
 
 namespace App\Livewire\Book;
 
-use App\Models\BookSubmission;
 use App\Models\BookReview;
-use Livewire\Component;
+use App\Models\BookSubmission;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class ReviewerDetail extends Component
 {
-  public $submission;
-  public $showReviewForm = false;
-  public $reviewStatus = '';
-  public $reviewNotes = '';
+    public $submission;
 
-  public function mount($id)
-  {
-    $this->submission = BookSubmission::with(['user', 'authors', 'files', 'reviews.reviewer'])
-      ->findOrFail($id);
-  }
+    public $showReviewForm = false;
 
-  public function toggleReviewForm()
-  {
-    $this->showReviewForm = !$this->showReviewForm;
+    public $reviewStatus = '';
 
-    if (!$this->showReviewForm) {
-      $this->resetReviewForm();
+    public $reviewNotes = '';
+
+    public function mount($id)
+    {
+        $this->submission = BookSubmission::with(['user', 'authors', 'files', 'reviews.reviewer'])
+            ->findOrFail($id);
     }
-  }
 
-  public function resetReviewForm()
-  {
-    $this->reviewStatus = '';
-    $this->reviewNotes = '';
-  }
+    public function toggleReviewForm()
+    {
+        $this->showReviewForm = ! $this->showReviewForm;
 
-  public function submitReview()
-  {
-    $this->validate([
-      'reviewStatus' => 'required|in:approved,revision,rejected',
-      'reviewNotes' => 'required|min:10',
-    ], [
-      'reviewStatus.required' => 'Keputusan review harus dipilih',
-      'reviewStatus.in' => 'Keputusan review tidak valid',
-      'reviewNotes.required' => 'Catatan review harus diisi',
-      'reviewNotes.min' => 'Catatan review minimal 10 karakter',
-    ]);
+        if (! $this->showReviewForm) {
+            $this->resetReviewForm();
+        }
+    }
 
-    // Create review
-    BookReview::create([
-      'book_submission_id' => $this->submission->id,
-      'reviewer_id' => Auth::id(),
-      'decision' => $this->reviewStatus,
-      'review_notes' => $this->reviewNotes,
-      'reviewed_at' => now(),
-    ]);
+    public function resetReviewForm()
+    {
+        $this->reviewStatus = '';
+        $this->reviewNotes = '';
+    }
 
-    // Update submission status based on review
-    $this->submission->update([
-      'status' => $this->reviewStatus === 'approved' ? 'approved' :
-        ($this->reviewStatus === 'revision' ? 'revision' : 'rejected'),
-    ]);
+    public function submitReview()
+    {
+        $this->validate([
+            'reviewStatus' => 'required|in:approved,revision,rejected',
+            'reviewNotes' => 'required|min:10',
+        ], [
+            'reviewStatus.required' => 'Keputusan review harus dipilih',
+            'reviewStatus.in' => 'Keputusan review tidak valid',
+            'reviewNotes.required' => 'Catatan review harus diisi',
+            'reviewNotes.min' => 'Catatan review minimal 10 karakter',
+        ]);
 
-    session()->flash('success', 'Review berhasil disimpan');
+        // Create review
+        BookReview::create([
+            'book_submission_id' => $this->submission->id,
+            'reviewer_id' => Auth::id(),
+            'decision' => $this->reviewStatus,
+            'review_notes' => $this->reviewNotes,
+            'reviewed_at' => now(),
+        ]);
 
-    $this->showReviewForm = false;
-    $this->resetReviewForm();
-    $this->submission->refresh();
-  }
+        // Update submission status based on review
+        $this->submission->update([
+            'status' => $this->reviewStatus === 'approved' ? 'approved' :
+              ($this->reviewStatus === 'revision' ? 'revision' : 'rejected'),
+        ]);
 
-  public function render()
-  {
-    return view('livewire.book.reviewer-detail');
-  }
+        session()->flash('success', 'Review berhasil disimpan');
+
+        $this->showReviewForm = false;
+        $this->resetReviewForm();
+        $this->submission->refresh();
+    }
+
+    public function render()
+    {
+        return view('livewire.book.reviewer-detail');
+    }
 }

@@ -37,7 +37,7 @@ class BookReview extends Model
     // Helper method untuk cek apakah sudah direview
     public function isReviewed()
     {
-        return !is_null($this->reviewed_at);
+        return ! is_null($this->reviewed_at);
     }
 
     // Helper method untuk cek apakah melewati deadline

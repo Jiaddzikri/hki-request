@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('components.layouts.portal')]
 class Portal extends Component
@@ -13,5 +13,4 @@ class Portal extends Component
 
         return view('livewire.portal');
     }
-
 }

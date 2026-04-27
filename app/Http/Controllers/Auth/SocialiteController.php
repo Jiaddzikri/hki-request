@@ -11,7 +11,7 @@ use Storage;
 
 class SocialiteController extends Controller
 {
-    public function redirect() 
+    public function redirect()
     {
         return Socialite::driver('google')->redirect();
     }
@@ -19,19 +19,19 @@ class SocialiteController extends Controller
     public function callback()
     {
         try {
-        $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->user();
 
-        if (!str_ends_with($googleUser->getEmail(), 'unsap.ac.id')) {
-            return redirect('/login')->with('error', 'Gunakan email kampus!');
-        }
+            if (! str_ends_with($googleUser->getEmail(), 'unsap.ac.id')) {
+                return redirect('/login')->with('error', 'Gunakan email kampus!');
+            }
 
-        $fileName = '/avatars' . $googleUser->getId() . '.jpg';
-        $fileContents = file_get_contents($googleUser->getAvatar());
-        Storage::disk('public')->put($fileName, $fileContents);
+            $fileName = '/avatars'.$googleUser->getId().'.jpg';
+            $fileContents = file_get_contents($googleUser->getAvatar());
+            Storage::disk('public')->put($fileName, $fileContents);
 
-        $avatarPath = (string) "storage/" . $fileName;
+            $avatarPath = (string) 'storage/'.$fileName;
 
-        $user = User::updateOrCreate(
+            $user = User::updateOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
                     'name' => $googleUser->getName(),
@@ -47,8 +47,8 @@ class SocialiteController extends Controller
             Auth::login($user);
 
             return redirect()->intended('/');
-        } catch(Exception $error) {
-            return redirect('/login')->with('error', 'Login Gagal: ' . $error->getMessage());
+        } catch (Exception $error) {
+            return redirect('/login')->with('error', 'Login Gagal: '.$error->getMessage());
         }
     }
 }

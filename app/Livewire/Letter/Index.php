@@ -2,117 +2,124 @@
 
 namespace App\Livewire\Letter;
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Livewire\WithPagination;
 use App\Models\LtrSubmission;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 
 class Index extends Component
 {
-  use WithPagination;
+    use WithPagination;
 
-  public $search = '';
-  public $filterCategory = '';
-  public $filterUnit = '';
-  public $showModal = false;
-  public $selectedSubmission = null;
-  public $perPage = 10;
+    public $search = '';
 
-  protected $queryString = [
-    'search' => ['except' => ''],
-    'filterCategory' => ['except' => ''],
-    'filterUnit' => ['except' => ''],
-    'perPage' => ['except' => 10],
-  ];
+    public $filterCategory = '';
 
-  public function updatingSearch()
-  {
-    $this->resetPage();
-  }
+    public $filterUnit = '';
 
-  public function updatingFilterCategory()
-  {
-    $this->resetPage();
-  }
+    public $showModal = false;
 
-  public function updatingFilterUnit()
-  {
-    $this->resetPage();
-  }
+    public $selectedSubmission = null;
 
-  public function updatingPerPage()
-  {
-    $this->resetPage();
-  }
+    public $perPage = 10;
 
-  public function delete($id)
-  {
-    $submission = LtrSubmission::findOrFail($id);
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'filterCategory' => ['except' => ''],
+        'filterUnit' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
 
-    // Check if user owns this submission
-    if ($submission->user_id !== Auth::id()) {
-      session()->flash('error', 'Anda tidak memiliki akses untuk menghapus submission ini.');
-      return;
+    public function updatingSearch()
+    {
+        $this->resetPage();
     }
 
-    $submission->delete();
-    session()->flash('success', 'Submission berhasil dihapus!');
-  }
-
-  public function viewDetail($id)
-  {
-    $this->selectedSubmission = LtrSubmission::with(['user', 'category', 'unit', 'reviewer'])->findOrFail($id);
-    $this->showModal = true;
-  }
-
-  public function closeModal()
-  {
-    $this->showModal = false;
-    $this->selectedSubmission = null;
-  }
-
-  public function getIndicatorsArray()
-  {
-    if (!$this->selectedSubmission || !$this->selectedSubmission->indicators) {
-      return [];
+    public function updatingFilterCategory()
+    {
+        $this->resetPage();
     }
 
-    // Split by comma and filter empty values, trim whitespace
-    return array_filter(array_map('trim', explode(',', $this->selectedSubmission->indicators)));
-  }
-  public function render()
-  {
-    $query = LtrSubmission::with(['user', 'category', 'unit'])
-      ->where('user_id', Auth::id());
-
-    if ($this->search) {
-      $query->where(function ($q) {
-        $q->where('description', 'like', '%' . $this->search . '%')
-          ->orWhere('indicators', 'like', '%' . $this->search . '%')
-          ->orWhere('url_documentation', 'like', '%' . $this->search . '%');
-      });
+    public function updatingFilterUnit()
+    {
+        $this->resetPage();
     }
 
-    if ($this->filterCategory) {
-      $query->where('ltr_category_id', $this->filterCategory);
+    public function updatingPerPage()
+    {
+        $this->resetPage();
     }
 
-    if ($this->filterUnit) {
-      $query->where('ltr_unit_id', $this->filterUnit);
+    public function delete($id)
+    {
+        $submission = LtrSubmission::findOrFail($id);
+
+        // Check if user owns this submission
+        if ($submission->user_id !== Auth::id()) {
+            session()->flash('error', 'Anda tidak memiliki akses untuk menghapus submission ini.');
+
+            return;
+        }
+
+        $submission->delete();
+        session()->flash('success', 'Submission berhasil dihapus!');
     }
 
-    $submissions = $query->latest()->paginate($this->perPage);
+    public function viewDetail($id)
+    {
+        $this->selectedSubmission = LtrSubmission::with(['user', 'category', 'unit', 'reviewer'])->findOrFail($id);
+        $this->showModal = true;
+    }
 
-    $categories = \App\Models\LtrCategory::all();
-    $units = \App\Models\LtrUnit::all();
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->selectedSubmission = null;
+    }
 
-    return view('livewire.letter.index', [
-      'submissions' => $submissions,
-      'categories' => $categories,
-      'units' => $units,
-    ]);
-  }
+    public function getIndicatorsArray()
+    {
+        if (! $this->selectedSubmission || ! $this->selectedSubmission->indicators) {
+            return [];
+        }
+
+        // Split by comma and filter empty values, trim whitespace
+        return array_filter(array_map('trim', explode(',', $this->selectedSubmission->indicators)));
+    }
+
+    public function render()
+    {
+        $query = LtrSubmission::with(['user', 'category', 'unit'])
+            ->where('user_id', Auth::id());
+
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('description', 'like', '%'.$this->search.'%')
+                    ->orWhere('indicators', 'like', '%'.$this->search.'%')
+                    ->orWhere('url_documentation', 'like', '%'.$this->search.'%');
+            });
+        }
+
+        if ($this->filterCategory) {
+            $query->where('ltr_category_id', $this->filterCategory);
+        }
+
+        if ($this->filterUnit) {
+            $query->where('ltr_unit_id', $this->filterUnit);
+        }
+
+        $submissions = $query->latest()->paginate($this->perPage);
+
+        $categories = \App\Models\LtrCategory::all();
+        $units = \App\Models\LtrUnit::all();
+
+        return view('livewire.letter.index', [
+            'submissions' => $submissions,
+            'categories' => $categories,
+            'units' => $units,
+        ]);
+    }
 }

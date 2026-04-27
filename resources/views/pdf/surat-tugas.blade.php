@@ -97,6 +97,7 @@
     .table-data {
       width: 100%;
       border-collapse: collapse;
+      table-layout: auto;
       margin-top: 10px;
       margin-bottom: 15px;
     }
@@ -113,10 +114,27 @@
       background-color: #f0f0f0;
       /* Opsional: beri sedikit warna abu di header */
       text-align: center;
+      font-size: 10pt;
+      line-height: 1.25;
+      white-space: normal;
+      padding: 7px 4px;
+      vertical-align: middle;
+    }
+
+    .table-data td {
+      word-break: break-word;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    thead tr {
+      page-break-inside: avoid;
     }
 
     /* Mengatur agar baris tabel tidak terpotong jelek saat pindah halaman */
-    tr {
+    tbody tr {
       page-break-inside: avoid;
     }
 
@@ -201,14 +219,45 @@
   <table class="table-data">
     <thead>
       <tr>
-        <th style="width: 5%">No</th>
-        <th style="width: 35%">Nama Peneliti</th>
-        <th style="width: 25%">NIDN</th>
-        <th style="width: 35%">Jabatan</th>
+        <th style="width: 6%">No</th>
+        <th style="width: 34%">Nama<br>Peneliti</th>
+        <th style="width: 22%">NIDN</th>
+        <th style="width: 38%">Jabatan</th>
       </tr>
     </thead>
     <tbody>
-      @foreach($members as $index => $member)
+      @php
+        $positionLabels = [
+          'asisten_ahli' => 'Asisten Ahli',
+          'lektor' => 'Lektor',
+          'lektor_kepala' => 'Lektor Kepala',
+          'guru_besar' => 'Guru Besar',
+        ];
+
+        $memberRows = collect($members ?? [])->all();
+
+        if (empty($memberRows)) {
+          $assignmentPositions = $assignment->academic_positions;
+
+          if (is_string($assignmentPositions)) {
+            $decoded = json_decode($assignmentPositions, true);
+            $assignmentPositions = is_array($decoded) ? $decoded : [];
+          }
+
+          if (! is_array($assignmentPositions)) {
+            $assignmentPositions = [];
+          }
+
+          $memberRows = [[
+            'name' => $assignment->full_name,
+            'gelar' => null,
+            'nidn_nip_nim' => $assignment->nidn,
+            'academic_position' => $assignmentPositions,
+          ]];
+        }
+      @endphp
+
+      @foreach($memberRows as $member)
         <tr>
           <td class="text-center">{{ $loop->iteration }}</td>
           <td>
@@ -219,12 +268,6 @@
           <td>
             @php
               $positions = is_array($member['academic_position']) ? $member['academic_position'] : [];
-              $positionLabels = [
-                'asisten_ahli' => 'Asisten Ahli',
-                'lektor' => 'Lektor',
-                'lektor_kepala' => 'Lektor Kepala',
-                'guru_besar' => 'Guru Besar'
-              ];
               $displayPositions = array_map(function($pos) use ($positionLabels) {
                 return $positionLabels[$pos] ?? ucwords(str_replace('_', ' ', $pos));
               }, $positions);
@@ -279,7 +322,7 @@
           <div class="text-bold underline" style="text-decoration: underline;">
             Muhammad Agreindra Helmiawan, S.Kom., M.T
           </div>
-          <div>0420108603<div>
+          <div>NUPTK: 0420108603</div>
         </td>
       </tr>
     </table>

@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hki_proposal_members', function (Blueprint $table) {
-        $table->id();
-        $table->foreignUuid('hki_proposal_id')->constrained('hki_proposals')->cascadeOnDelete();
-        $table->foreignId('user_id')->nullable()->constrained('users'); 
-        $table->string('name'); 
-        $table->string('identifier');
-        $table->string('role');
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignUuid('hki_proposal_id')->constrained('hki_proposals')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->string('name');
+            $table->string('identifier');
+            $table->string('role');
+            $table->timestamps();
+        });
     }
 
     /**

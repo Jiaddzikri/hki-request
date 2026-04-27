@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\LTRSubmission;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class GrantContractController extends Controller
 {
@@ -21,7 +21,7 @@ class GrantContractController extends Controller
             abort(403, 'Dokumen kontrak belum tersedia.');
         }
 
-        if (auth()->id() !== $submission->user_id && !auth()->user()->hasRole(['super-admin', 'reviewer'])) {
+        if (auth()->id() !== $submission->user_id && ! auth()->user()->hasRole(['super-admin', 'reviewer'])) {
             abort(403, 'Unauthorized.');
         }
         $validationUrl = route('grants.detail', $submission->id);
@@ -35,7 +35,7 @@ class GrantContractController extends Controller
             roundBlockSizeMode: RoundBlockSizeMode::Margin
         );
 
-        $writer = new PngWriter();
+        $writer = new PngWriter;
 
         $result = $writer->write($qrCode);
         $qrCodeDataUri = $result->getDataUri();
@@ -43,13 +43,13 @@ class GrantContractController extends Controller
         $data = [
             's' => $submission,
             'qrCode' => $qrCodeDataUri,
-            'nomor_kontrak' => 'KONTRAK/' . $submission->period->year . '/' . $submission->scheme->code . '/' . str_pad($submission->id, 3, '0', STR_PAD_LEFT),
+            'nomor_kontrak' => 'KONTRAK/'.$submission->period->year.'/'.$submission->scheme->code.'/'.str_pad($submission->id, 3, '0', STR_PAD_LEFT),
             'tanggal_cetak' => now()->translatedFormat('d F Y'),
         ];
 
         $pdf = Pdf::loadView('pdf.grant-contract', $data);
         $pdf->setPaper('a4', 'portrait');
 
-        return $pdf->stream('Kontrak_Penelitian_' . $submission->user->name . '.pdf');
+        return $pdf->stream('Kontrak_Penelitian_'.$submission->user->name.'.pdf');
     }
 }

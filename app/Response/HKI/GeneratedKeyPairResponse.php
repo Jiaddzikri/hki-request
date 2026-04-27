@@ -2,8 +2,9 @@
 
 namespace App\Response\HKI;
 
-class GeneratedKeyPairResponse 
+class GeneratedKeyPairResponse
 {
-  public ?string $privateKey;
-  public ?string $publicKey;
+    public ?string $privateKey;
+
+    public ?string $publicKey;
 }

@@ -70,6 +70,7 @@
           </svg>
           <span>Autentikasi Aman dengan OAuth 2.0 + PIN</span>
         </div>
+
       </div>
     </div>
 
@@ -104,7 +105,8 @@
 
       <p class="text-xs text-gray-500 dark:text-gray-400">
         Mengalami kendala? Hubungi <a href="mailto:hki@unsap.ac.id"
-          class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Sentra HKI</a>
+          class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Sentra HKI</a><br>
+        <a href="{{ route('admin.login') }}" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition mt-2 inline-block">Login Khusus Admin</a>
       </p>
     </div>
   </div>

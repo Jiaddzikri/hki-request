@@ -8,7 +8,9 @@ use Livewire\Component;
 class Verifier extends Component
 {
     public $logId;
+
     public $status = 'IDLE';
+
     public $verificationTime;
 
     public function mount($logId)
@@ -27,7 +29,7 @@ class Verifier extends Component
                 $payloadArray = json_decode($payloadArray, true);
             }
 
-            if (!is_array($payloadArray)) {
+            if (! is_array($payloadArray)) {
                 $payloadArray = [];
             }
 
@@ -36,12 +38,13 @@ class Verifier extends Component
 
             $timestamp = $log->created_at->format('Y-m-d H:i:s');
 
-            $rawString = $log->previous_hash . $log->user_id . $log->action . $payloadJson . $timestamp;
+            $rawString = $log->previous_hash.$log->user_id.$log->action.$payloadJson.$timestamp;
 
             $recalculatedHash = hash('sha256', $rawString);
 
             if ($recalculatedHash !== $log->current_hash) {
                 $this->status = 'INVALID_HASH';
+
                 return;
             }
 

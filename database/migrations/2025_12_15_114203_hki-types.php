@@ -10,20 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('hki_types', function (Blueprint $table) {
-        $table->id();
-        
-        $table->foreignId('parent_id')
-              ->nullable()
-              ->constrained('hki_types')
-              ->nullOnDelete(); 
+    {
+        Schema::create('hki_types', function (Blueprint $table) {
+            $table->id();
 
-        $table->string('name'); 
-        $table->boolean('requires_claims')->default(false);
-        $table->timestamps();
-    });
-}
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('hki_types')
+                ->nullOnDelete();
+
+            $table->string('name');
+            $table->boolean('requires_claims')->default(false);
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace App\Response\HKI;
 
-class DecryptPrivateKeyResponse 
+class DecryptPrivateKeyResponse
 {
-  public ?string $decrypted;
+    public ?string $decrypted;
 }

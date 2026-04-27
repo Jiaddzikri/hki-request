@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hki_proposal_members', function(Blueprint $table) {
+        Schema::table('hki_proposal_members', function (Blueprint $table) {
             $table->dropColumn('nik');
             $table->dropColumn('npwp');
             $table->dropColumn('email');
