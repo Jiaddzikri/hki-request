@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ltr_units', function (Blueprint $table) {
-            $table->id();
-            $table->string('unit');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['public_key', 'private_key_encrypted']);
         });
     }
 
@@ -22,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ltr_units');
+        Schema::table('users', function (Blueprint $table) {
+            $table->text('public_key')->nullable();
+            $table->text('private_key_encrypted')->nullable();
+        });
     }
 };

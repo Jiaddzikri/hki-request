@@ -2,64 +2,109 @@
 
 namespace App\Services\HKI;
 
-use App\Models\HkiAuditLog;
-use App\Request\HKI\DecryptPrivateKeyRequest;
-use App\Request\HKI\LogActivityRequest;
-use App\Models\AuditLog;
-
+use App\Models\HKIAuditLog;
 use DB;
-use Exception;
 
 class AuditLogService
 {
-  public function __construct(private KeyManagementService $service)
-  {
+    /**
+     * Log activity with global hash chaining.
+     * Supports both PIN-based signatures and Biometric evidence.
+     */
+    public function logActivityGlobal(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            // 1. Get the latest log globally to maintain the chain
+            $lastLog = HKIAuditLog::latest('id')->first();
+            $previousHash = $lastLog ? $lastLog->current_hash : str_repeat('0', 64);
 
-  }
+            // 2. Prepare Payload
+            $payload = $data['payload'] ?? [];
+            ksort($payload);
+            $payloadJson = json_encode($payload);
+            $timestamp = now()->format('Y-m-d H:i:s');
 
-  public function logActivity(LogActivityRequest $request)
-  {
-    return DB::transaction(function () use ($request) {
-      $lastLog = HKIAuditLog::latest('id')->first();
+            // 3. Calculate Current Hash (Include model details to ensure uniqueness)
+            $rawString = $previousHash.
+                         $data['model_type'].
+                         $data['model_id'].
+                         ($data['user_id'] ?? auth()->id()).
+                         $data['action'].
+                         $payloadJson.
+                         $timestamp;
+            $currentHash = hash('sha256', $rawString);
 
-      $modelClass = get_class($request->modelType);
+            // 4. Create the Log
+            return HKIAuditLog::create([
+                'user_id' => $data['user_id'] ?? auth()->id(),
+                'model_type' => $data['model_type'],
+                'model_id' => $data['model_id'],
+                'action' => $data['action'],
+                'payload' => $payload,
+                'previous_hash' => $previousHash,
+                'current_hash' => $currentHash,
+                'digital_signature' => $data['digital_signature'] ?? null,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+        });
+    }
 
-      $previousHash = $lastLog ? $lastLog->current_hash : str_repeat('0', 64);
+    /**
+     * Verify the integrity of the entire hash chain.
+     */
+    public function verifyChain(): array
+    {
+        $logs = HKIAuditLog::orderBy('id', 'asc')->get();
+        $isValid = true;
+        $errors = [];
+        $previousHash = str_repeat('0', 64);
 
-      ksort($request->payload);
-      $payloadJson = json_encode($request->payload);
-      $timestamp = now()->format('Y-m-d H:i:s');
+        foreach ($logs as $log) {
+            // 1. Check if previous_hash matches the chain
+            if ($log->previous_hash !== $previousHash) {
+                $isValid = false;
+                $errors[] = [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'error' => 'Chain broken: expected previous hash '.substr($previousHash, 0, 8).'... but record has '.substr($log->previous_hash, 0, 8).'...',
+                ];
+            }
 
-      $rawString = $previousHash . $request->user->id . $request->action . $payloadJson . $timestamp;
-      $currentHash = hash('sha256', $rawString);
+            // 2. Recalculate current_hash
+            $payload = $log->payload;
+            if (is_array($payload)) {
+                ksort($payload);
+            }
+            $payloadJson = json_encode($payload);
 
-      $decryptReq = new DecryptPrivateKeyRequest();
-      $decryptReq->pin = $request->pin;
-      $decryptReq->encryptedKey = $request->user->private_key_encrypted;
+            $timestamp = $log->created_at->format('Y-m-d H:i:s');
+            $rawString = $log->previous_hash.
+                         $log->model_type.
+                         $log->model_id.
+                         $log->user_id.
+                         $log->action.
+                         $payloadJson.
+                         $timestamp;
+            $recalculatedHash = hash('sha256', $rawString);
 
-      $decryptedKey = $this->service->decryptPrivateKey($decryptReq);
-      $privateKey = $decryptedKey->decrypted;
+            if ($log->current_hash !== $recalculatedHash) {
+                $isValid = false;
+                $errors[] = [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'error' => 'Hash mismatch: recalculated '.substr($recalculatedHash, 0, 8).'... but record has '.substr($log->current_hash, 0, 8).'...',
+                ];
+            }
 
-      $signature = '';
+            $previousHash = $log->current_hash;
+        }
 
-      $signSuccess = openssl_sign($currentHash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
-
-      if (!$signSuccess) {
-        throw new Exception("Gagal menandatangani data forensik.");
-      }
-
-      return HkiAuditLog::create([
-        'user_id' => $request->user->id,
-        'model_type' => $modelClass,
-        'model_id' => $request->modelId,
-        'action' => $request->action,
-        'payload' => $request->payload,
-        'previous_hash' => $previousHash,
-        'current_hash' => $currentHash,
-        'digital_signature' => base64_encode($signature),
-        'created_at' => $timestamp,
-        'updated_at' => $timestamp,
-      ]);
-    });
-  }
+        return [
+            'is_valid' => $isValid,
+            'errors' => $errors,
+            'total_logs' => $logs->count(),
+            'verified_at' => now()->format('Y-m-d H:i:s'),
+        ];
+    }
 }

@@ -49,12 +49,13 @@
           @endif
 
           @if($isEditMode)
-            <button wire:click="saveRevision"
+            <button wire:click="initiateSaveRevision" wire:loading.attr="disabled"
               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
-              Simpan & Ajukan Ulang
+              <span wire:loading.remove wire:target="initiateSaveRevision">Simpan & Ajukan Ulang</span>
+              <span wire:loading wire:target="initiateSaveRevision">Memuat...</span>
             </button>
             <button wire:click="cancelEdit"
               class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
@@ -64,6 +65,18 @@
               Batal
             </button>
           @endif
+
+          <button wire:click="auditHashChain" wire:loading.attr="disabled"
+            class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 focus:outline-none">
+            <svg wire:loading.remove wire:target="auditHashChain" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <svg wire:loading wire:target="auditHashChain" class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Audit Hash
+          </button>
 
           <a href="{{ route('hki.list') }}" class="text-sm text-blue-600 hover:text-blue-800">
             ← Kembali ke Daftar
@@ -102,11 +115,41 @@
             'REJECTED' => 'bg-red-100 text-red-800',
           ];
         @endphp
-        <span
-          class="px-3 py-1 inline-flex text-sm font-semibold rounded-full {{ $statusColors[$proposal->status] ?? 'bg-gray-100 text-gray-800' }}">
-          {{ $proposal->status }}
         </span>
       </div>
+
+      {{-- Audit Results --}}
+      @if($auditResults)
+        <div class="mb-6 p-4 rounded-lg {{ $auditResults['is_valid'] ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200' }}">
+          <div class="flex items-center gap-2 mb-2">
+            @if($auditResults['is_valid'])
+              <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-sm font-bold text-green-800">Rantai Hash Valid</span>
+            @else
+              <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-sm font-bold text-red-800">Rantai Hash Terputus!</span>
+            @endif
+          </div>
+          <p class="text-xs text-gray-600">Total Log Diverifikasi: {{ $auditResults['total_logs'] }}</p>
+          <p class="text-[10px] text-gray-400 mt-1">Diverifikasi pada: {{ $auditResults['verified_at'] }}</p>
+
+          @if(!$auditResults['is_valid'] && count($auditResults['errors']) > 0)
+            <div class="mt-3 space-y-2">
+              <p class="text-[10px] font-semibold text-red-700 uppercase">Detail Kesalahan:</p>
+              @foreach(array_slice($auditResults['errors'], 0, 3) as $error)
+                <div class="text-[10px] bg-white p-2 rounded border border-red-100 text-red-700">
+                  <strong>Log #{{ $error['id'] }} ({{ $error['action'] }}):</strong>
+                  <p>{{ $error['error'] }}</p>
+                </div>
+              @endforeach
+            </div>
+          @endif
+        </div>
+      @endif
     </div>
 
     {{-- Main Content --}}
@@ -430,9 +473,10 @@
                 class="px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50">
                 Batal
               </button>
-              <button type="button" wire:click="submitReview"
+              <button type="button" wire:click="initiateSubmitReview" wire:loading.attr="disabled"
                 class="px-4 py-2 bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-900">
-                Simpan Review
+                <span wire:loading.remove wire:target="initiateSubmitReview">Simpan Review</span>
+                <span wire:loading wire:target="initiateSubmitReview">Memuat...</span>
               </button>
             </div>
           </div>
@@ -440,5 +484,139 @@
       </div>
     @endif
   </div>
-</div>
+
+  <!-- Biometric Signing Modal -->
+  <x-modal id='biometric-sign-modal' center persistent>
+    <div class="px-6 text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-4 border border-blue-100">
+        <svg class="w-8 h-8 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/>
+        </svg>
+      </div>
+      <h1 class='text-xl text-gray-800 font-bold mb-2'>Verifikasi Biometrik</h1>
+      <p class='text-sm text-gray-600 max-w-sm mx-auto mb-2'>
+        Siapkan perangkat biometrik Anda untuk validasi data ini.
+      </p>
+      <p class="text-xs text-blue-600 mb-6 font-medium bg-blue-50 py-2 px-3 rounded-lg border border-blue-100">
+        💡 Jika perangkat ini tidak memiliki sensor biometrik, Anda dapat memilih opsi untuk memindai <strong>QR Code menggunakan Smartphone</strong> saat prompt browser muncul.
+      </p>
+      
+      <button id="start-biometric-btn" x-on:click="startScan()" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-md text-base font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+        Lakukan Pemindaian Sekarang
+      </button>
+      <p id="biometric-error" class="text-sm text-red-600 mt-4 hidden font-medium"></p>
+      <button x-on:click="$modalClose('biometric-sign-modal')" class="mt-4 text-sm text-gray-500 hover:text-gray-700">Batalkan</button>
+    </div>
+  </x-modal>
+  
+  <div x-data="{
+      currentOptions: null,
+      currentAction: null,
+      isSigningProcessing: false,
+      init() {
+          const handleWebAuthnEvent = (eventData, actionType) => {
+              let opts = eventData;
+              // Handle Livewire v3 wrapping
+              if (Array.isArray(opts)) opts = opts[0];
+              if (opts && opts.options) opts = opts.options;
+              // Handle Laragear publicKey wrapping
+              if (opts && opts.publicKey) opts = opts.publicKey;
+              
+              if (typeof opts === 'string') opts = JSON.parse(opts);
+              
+              this.currentOptions = opts;
+              this.currentAction = actionType;
+              $modalOpen('biometric-sign-modal');
+              
+              // Trigger scan automatically
+              setTimeout(() => {
+                  this.startScan();
+              }, 500);
+          };
+
+          Livewire.on('webauthn-sign-revision', (eventData) => handleWebAuthnEvent(eventData, 'revision'));
+          Livewire.on('webauthn-sign-review', (eventData) => handleWebAuthnEvent(eventData, 'review'));
+      },
+      async startScan() {
+          if (this.isSigningProcessing || !this.currentOptions) return;
+          this.isSigningProcessing = true;
+          
+          const btn = document.getElementById('start-biometric-btn');
+          const errorMsg = document.getElementById('biometric-error');
+          errorMsg.classList.add('hidden');
+          btn.disabled = true;
+          btn.innerText = 'Memproses Biometrik...';
+          
+          try {
+              const base64ToBuffer = (base64) => {
+                  if (!base64) throw new Error('Challenge data is missing');
+                  const binary_string = window.atob(base64.replace(/-/g, '+').replace(/_/g, '/').padEnd(base64.length + (4 - base64.length % 4) % 4, '='));
+                  const len = binary_string.length;
+                  const bytes = new Uint8Array(len);
+                  for (let i = 0; i < len; i++) { bytes[i] = binary_string.charCodeAt(i); }
+                  return bytes.buffer;
+              };
+              
+              let pubKey = this.currentOptions;
+
+              if (!pubKey.challenge) {
+                  throw new Error('Challenge tidak ditemukan dalam konfigurasi biometrik.');
+              }
+
+              const challengeArray = base64ToBuffer(pubKey.challenge);
+              const allowCredentials = (pubKey.allowCredentials || []).map(cred => ({
+                  type: cred.type,
+                  id: base64ToBuffer(cred.id),
+                  transports: cred.transports || []
+              }));
+
+              const assertion = await navigator.credentials.get({ 
+                  publicKey: {
+                      challenge: challengeArray,
+                      allowCredentials: allowCredentials,
+                      userVerification: pubKey.userVerification || 'preferred',
+                      timeout: pubKey.timeout || 60000,
+                      rpId: pubKey.rpId || window.location.hostname
+                  }
+              });
+
+              const bufferToBase64 = (buffer) => {
+                  const bytes = new Uint8Array(buffer);
+                  let binary = '';
+                  for (let i = 0; i < bytes.byteLength; i++) { binary += String.fromCharCode(bytes[i]); }
+                  return window.btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+              };
+
+              const responsePayload = {
+                  id: assertion.id,
+                  rawId: bufferToBase64(assertion.rawId),
+                  type: assertion.type,
+                  response: {
+                      authenticatorData: bufferToBase64(assertion.response.authenticatorData),
+                      clientDataJSON: bufferToBase64(assertion.response.clientDataJSON),
+                      signature: bufferToBase64(assertion.response.signature),
+                      userHandle: assertion.response.userHandle ? bufferToBase64(assertion.response.userHandle) : null,
+                  }
+              };
+
+              if (this.currentAction === 'revision') {
+                  @this.call('submitRevisionWithSignature', responsePayload);
+              } else if (this.currentAction === 'review') {
+                  @this.call('submitReviewWithSignature', responsePayload);
+              }
+              
+              $modalClose('biometric-sign-modal');
+              this.isSigningProcessing = false;
+              btn.disabled = false;
+              btn.innerText = 'Lakukan Pemindaian Sekarang';
+          } catch (error) {
+              this.isSigningProcessing = false;
+              btn.disabled = false;
+              btn.innerText = 'Coba Lagi Pindai Biometrik';
+              errorMsg.innerText = 'Gagal: ' + error.message;
+              errorMsg.classList.remove('hidden');
+          }
+      }
+  }">
+  </div>
 </div>

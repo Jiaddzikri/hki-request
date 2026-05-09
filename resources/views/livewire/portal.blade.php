@@ -217,7 +217,7 @@
                 Identitas Digital
               </h3>
               <p class="text-sm text-gray-600 leading-relaxed mb-4">
-                Kelola PIN dan Tanda Tangan Digital Anda.
+                Kelola Biometrik dan Tanda Tangan Digital Anda.
               </p>
 
               <div class="flex items-center text-sm font-semibold text-blue-800 group-hover:text-blue-900">

@@ -101,12 +101,20 @@
 
             <!-- Judul Card -->
             <div class="bg-white rounded-xl p-6 border-1 border-gray-200">
-              <label for="title" class="text-sm font-bold text-gray-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                Judul Ciptaan/Invensi <span class="text-red-500 ml-1">*</span>
-              </label>
+              <div class="flex items-center justify-between mb-3">
+                <label for="title" class="text-sm font-bold text-gray-800 flex items-center">
+                  <svg class="w-5 h-5 mr-2 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  Judul Ciptaan/Invensi <span class="text-red-500 ml-1">*</span>
+                </label>
+                <button wire:click="fillDummyData" type="button" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <svg class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                  </svg>
+                  Fill Demo Data
+                </button>
+              </div>
               <input type="text" id="title" wire:model="title"
                 class="w-full px-4 py-3 border-1 border-gray-300  focus:ring-4 focus:ring-indigo-100 rounded-lg"
                 placeholder="Masukkan judul ciptaan atau invensi">
@@ -711,8 +719,8 @@
               <div class="ml-4">
                 <h3 class="text-sm font-bold text-blue-900">Langkah Selanjutnya</h3>
                 <p class="mt-1 text-sm text-blue-800">
-                  Klik tombol <strong>"Kirim Proposal"</strong> di bawah untuk melanjutkan ke verifikasi PIN. 
-                  Setelah PIN diverifikasi, proposal Anda akan dikirim dan tidak dapat diubah.
+                  Klik tombol <strong>"Kirim & Tandatangani"</strong> di bawah untuk melakukan verifikasi Biometrik. 
+                  Setelah verifikasi biometrik berhasil, proposal Anda akan dikirim dan tidak dapat diubah.
                 </p>
               </div>
             </div>
@@ -745,32 +753,139 @@
           </svg>
         </button>
       @else
-        <button x-on:click="$modalOpen('modal-id')" type="button"
-          class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
-          <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Kirim Proposal
-        </button>
+        <div class="text-center mt-6">
+          <button wire:click="getSignOptions" wire:loading.attr="disabled" type="button"
+            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 disabled:opacity-50 transition-all duration-200">
+            <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/>
+            </svg>
+            <span wire:loading.remove wire:target="getSignOptions">Kirim & Tandatangani</span>
+            <span wire:loading wire:target="getSignOptions">Memuat...</span>
+          </button>
+          
+          @error('biometric')
+            <p class="mt-3 text-sm text-red-600 font-medium">{{ $message }}</p>
+          @enderror
+        </div>
 
-        <x-modal id='modal-id' center>
+        <!-- Biometric Signing Modal -->
+        <x-modal id='biometric-sign-modal' center persistent>
           <div class="px-6 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-800 mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-4 border border-blue-100">
+              <svg class="w-8 h-8 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/>
               </svg>
             </div>
-            <h1 class='text-2xl text-gray-800 font-bold mb-2'>Masukkan PIN Anda</h1>
-            <p class='text-sm text-gray-600 max-w-sm mx-auto'>
-              PIN ini akan menjadi tanda tangan digital Anda untuk memastikan permohonan ini tidak bisa diubah setelah dikirim
+            <h1 class='text-2xl text-gray-800 font-bold mb-2'>Verifikasi Tanda Tangan Digital</h1>
+            <p class='text-sm text-gray-600 max-w-sm mx-auto mb-6'>
+              Siapkan perangkat biometrik Anda (Sidik Jari, Face ID, atau YubiKey). Proses ini menjamin keaslian data.
             </p>
-          </div>
-          <div class="w-full flex justify-center mt-6 flex-col items-center">
-            <x-pin length="6" wire:model="pin" x-on:filled="$wire.submitProposal()" />
-            <p class="text-xs text-gray-500 mt-4">Masukkan 6 digit PIN keamanan Anda</p>
+            
+            <button id="start-biometric-btn" x-on:click="startScan()" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-md text-base font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+              Lakukan Pemindaian Sekarang
+            </button>
+            <p id="biometric-error" class="text-sm text-red-600 mt-4 hidden font-medium"></p>
+            <button x-on:click="$modalClose('biometric-sign-modal')" class="mt-4 text-sm text-gray-500 hover:text-gray-700">Batalkan</button>
           </div>
         </x-modal>
+        
+        <div x-data="{
+            currentOptions: null,
+            isSigningProcessing: false,
+            init() {
+                Livewire.on('webauthn-sign', (eventData) => {
+                    let opts = eventData;
+                    // Handle Livewire v3 wrapping
+                    if (Array.isArray(opts)) opts = opts[0];
+                    if (opts && opts.options) opts = opts.options;
+                    // Handle Laragear publicKey wrapping
+                    if (opts && opts.publicKey) opts = opts.publicKey;
+                    
+                    if (typeof opts === 'string') opts = JSON.parse(opts);
+                    
+                    this.currentOptions = opts;
+                    $modalOpen('biometric-sign-modal');
+                    
+                    // Trigger scan automatically
+                    setTimeout(() => {
+                        this.startScan();
+                    }, 500);
+                });
+            },
+            async startScan() {
+                if (this.isSigningProcessing || !this.currentOptions) return;
+                this.isSigningProcessing = true;
+                
+                const btn = document.getElementById('start-biometric-btn');
+                const errorMsg = document.getElementById('biometric-error');
+                errorMsg.classList.add('hidden');
+                btn.disabled = true;
+                btn.innerText = 'Memproses Biometrik...';
+                
+                try {
+                    const base64ToBuffer = (base64) => {
+                        if (!base64) throw new Error('Challenge data is missing');
+                        const binary_string = window.atob(base64.replace(/-/g, '+').replace(/_/g, '/').padEnd(base64.length + (4 - base64.length % 4) % 4, '='));
+                        const len = binary_string.length;
+                        const bytes = new Uint8Array(len);
+                        for (let i = 0; i < len; i++) { bytes[i] = binary_string.charCodeAt(i); }
+                        return bytes.buffer;
+                    };
+                    
+                    let pubKey = this.currentOptions;
+    
+                    if (!pubKey.challenge) {
+                        throw new Error('Challenge tidak ditemukan dalam konfigurasi biometrik.');
+                    }
 
+                    const challengeArray = base64ToBuffer(pubKey.challenge);
+                    const allowCredentials = (pubKey.allowCredentials || []).map(cred => ({
+                        type: cred.type,
+                        id: base64ToBuffer(cred.id),
+                        transports: cred.transports || []
+                    }));
+    
+                    const assertion = await navigator.credentials.get({ 
+                        publicKey: {
+                            challenge: challengeArray,
+                            allowCredentials: allowCredentials,
+                            userVerification: pubKey.userVerification || 'preferred',
+                            timeout: pubKey.timeout || 60000,
+                            rpId: pubKey.rpId || window.location.hostname
+                        }
+                    });
+    
+                    const bufferToBase64 = (buffer) => {
+                        const bytes = new Uint8Array(buffer);
+                        let binary = '';
+                        for (let i = 0; i < bytes.byteLength; i++) { binary += String.fromCharCode(bytes[i]); }
+                        return window.btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                    };
+    
+                    const responsePayload = {
+                        id: assertion.id,
+                        rawId: bufferToBase64(assertion.rawId),
+                        type: assertion.type,
+                        response: {
+                            authenticatorData: bufferToBase64(assertion.response.authenticatorData),
+                            clientDataJSON: bufferToBase64(assertion.response.clientDataJSON),
+                            signature: bufferToBase64(assertion.response.signature),
+                            userHandle: assertion.response.userHandle ? bufferToBase64(assertion.response.userHandle) : null,
+                        }
+                    };
+    
+                    @this.call('submitWithSignature', responsePayload);
+                    $modalClose('biometric-sign-modal');
+                } catch (error) {
+                    this.isSigningProcessing = false;
+                    btn.disabled = false;
+                    btn.innerText = 'Coba Lagi Pindai Biometrik';
+                    errorMsg.innerText = 'Gagal: ' + error.message;
+                    errorMsg.classList.remove('hidden');
+                }
+            }
+        }">
+        </div>
       @endif
     </div>
   </div>

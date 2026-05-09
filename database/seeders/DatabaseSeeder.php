@@ -13,15 +13,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Setup Roles and Permissions
+        $this->call([
+            RoleSeeder::class,
+            ReviewerRoleSeeder::class,
+        ]);
 
+        // 2. Setup Data Types and Categories
+        $this->call([
+            HKITypeSeeder::class,
+            LetterCategory::class,
+            LetterUnit::class,
+        ]);
+
+        // 3. Create Test User
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-
-
-        $this->call(HkiTypeSeeder::class);
     }
-
 }

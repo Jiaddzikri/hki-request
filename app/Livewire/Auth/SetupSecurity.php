@@ -3,56 +3,96 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use App\Request\HKI\EncryptPrivateKeyRequest;
-use App\Services\HKI\KeyManagementService;
-use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laragear\WebAuthn\WebAuthn;
 use Livewire\Attributes\Layout;
-use Flux\Flux;
+use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
 class SetupSecurity extends Component
 {
-  public string $pin = '';
-  public string $pin_confirmation = '';
+    public bool $registered = false;
 
-  public function save(KeyManagementService $keyService)
-  {
-    $this->validate([
-      'pin' => 'required|digits:6|confirmed',
-    ]);
+    public array $recoveryCodes = [];
 
-    try {
-      $keys = $keyService->generateKeyPair();
+    /**
+     * Start the WebAuthn registration ceremony.
+     */
+    public function registerOptions($attachment = null)
+    {
+        $user = Auth::user();
 
-      $request = new EncryptPrivateKeyRequest();
-      $request->privateKey = $keys->privateKey;
-      $request->pin = $this->pin;
+        // Generate registration options from the package
+        $options = $user->generateRegisterOptions();
 
-      $encryptedResponse = $keyService->encryptPrivateKey($request);
-
-      $user = auth()->user();
-
-      $user->update([
-        'public_key' => $keys->publicKey,
-        'private_key_encrypted' => $encryptedResponse->base64,
-      ]);
-
-      session()->flash('status', 'Identitas Digital Berhasil Dibuat!');
-
-      return redirect()->route('portal');
-
-    } catch (\Exception $e) {
-      if ($e->getCode() >= 500) {
-        $this->addError('pin', 'Terjadi kesalahan sistem: ');
-      } else {
-        $this->addError('pin', $e->getMessage());
-
-      }
+        // Pass options to frontend to trigger browser's biometric prompt
+        $this->dispatch('webauthn-register', options: $options, attachment: $attachment);
     }
-  }
 
-  public function render()
-  {
-    return view('livewire.auth.setup-security');
-  }
+    /**
+     * Complete the registration after browser response.
+     */
+    public function completeRegistration($attestation)
+    {
+        $user = Auth::user();
+
+        DB::beginTransaction();
+        try {
+            // Verify and save the credential using the package
+            $credential = $user->addCredential($attestation);
+
+            // THESIS INNOVATION: Calculate HMAC Checksum (Immutable Anchor)
+            // Using APP_KEY as the master secret to prevent admin swapping public keys
+            $checksum = hash_hmac(
+                'sha256',
+                $user->id.$credential->public_key,
+                config('app.key')
+            );
+
+            $credential->forceFill([
+                'public_key_checksum' => $checksum,
+            ])->save();
+
+            // THESIS INNOVATION: Generate Recovery Codes
+            $this->generateRecoveryCodes($user);
+
+            DB::commit();
+
+            $this->registered = true;
+            session()->flash('status', 'Identitas Biometrik Berhasil Dibuat!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->addError('registration', 'Gagal mendaftarkan biometrik: '.$e->getMessage());
+        }
+    }
+
+    protected function generateRecoveryCodes(User $user)
+    {
+        // Clear old codes if any (Backdoor prevention)
+        $user->recoveryCodes()->delete();
+
+        for ($i = 0; $i < 8; $i++) {
+            $plainCode = strtoupper(Str::random(4).'-'.Str::random(4));
+            $this->recoveryCodes[] = $plainCode;
+
+            $user->recoveryCodes()->create([
+                'id' => Str::uuid(),
+                'code_hash' => Hash::make($plainCode),
+            ]);
+        }
+    }
+
+    public function finish()
+    {
+        return redirect()->route('portal');
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.setup-security');
+    }
 }
