@@ -23,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \App\Models\UserMasterSecret::observe(\App\Observers\UserMasterSecretObserver::class);
     }
 }

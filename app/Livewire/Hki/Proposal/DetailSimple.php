@@ -272,7 +272,7 @@ class DetailSimple extends Component
                 'payload' => [
                     'decision' => $this->reviewDecision,
                     'review_notes' => $this->reviewNotes,
-                    'new_status' => $statusMap[$this->reviewDecision],
+                    'status' => $statusMap[$this->reviewDecision],
                     'auth_id' => $assertion['id'],
                 ],
                 'digital_signature' => $assertion['response']['signature'],

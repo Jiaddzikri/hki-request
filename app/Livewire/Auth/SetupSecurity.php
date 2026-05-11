@@ -2,11 +2,8 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laragear\WebAuthn\WebAuthn;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -35,7 +32,7 @@ class SetupSecurity extends Component
     /**
      * Complete the registration after browser response.
      */
-    public function completeRegistration($attestation)
+    public function completeRegistration($attestation, $institutionalShare = null, $secretHash = null)
     {
         $user = Auth::user();
 
@@ -56,8 +53,17 @@ class SetupSecurity extends Component
                 'public_key_checksum' => $checksum,
             ])->save();
 
-            // THESIS INNOVATION: Generate Recovery Codes
-            $this->generateRecoveryCodes($user);
+            // THESIS INNOVATION: SSS Institutional Share (Decentralized Recovery)
+            if ($institutionalShare && $secretHash) {
+                // Delete any old master secret to prevent deadlock issues
+                \App\Models\UserMasterSecret::where('user_id', $user->id)->delete();
+
+                \App\Models\UserMasterSecret::create([
+                    'user_id' => $user->id,
+                    'secret_hash' => $secretHash,
+                    'institutional_share' => $institutionalShare,
+                ]);
+            }
 
             DB::commit();
 
@@ -67,22 +73,6 @@ class SetupSecurity extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('registration', 'Gagal mendaftarkan biometrik: '.$e->getMessage());
-        }
-    }
-
-    protected function generateRecoveryCodes(User $user)
-    {
-        // Clear old codes if any (Backdoor prevention)
-        $user->recoveryCodes()->delete();
-
-        for ($i = 0; $i < 8; $i++) {
-            $plainCode = strtoupper(Str::random(4).'-'.Str::random(4));
-            $this->recoveryCodes[] = $plainCode;
-
-            $user->recoveryCodes()->create([
-                'id' => Str::uuid(),
-                'code_hash' => Hash::make($plainCode),
-            ]);
         }
     }
 

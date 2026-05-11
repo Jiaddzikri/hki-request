@@ -6,11 +6,8 @@ use App\Livewire\Hki\Forensic\PublicVerifier;
 use App\Livewire\Hki\Proposal\Lists;
 use App\Livewire\Letter\Create;
 use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,24 +27,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::redirect('settings', 'settings/profile');
 
         Route::get('settings/profile', Profile::class)->name('profile.edit');
-        Route::get('settings/password', Password::class)->name('user-password.edit');
+        Route::get('settings/biometrics', \App\Livewire\Settings\Biometrics::class)->name('settings.biometrics');
         Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
-
-        Route::get('settings/two-factor', TwoFactor::class)
-            ->middleware(
-                when(
-                    Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
-                    ['password.confirm'],
-                    [],
-                ),
-            )
-            ->name('two-factor.show');
     });
 
     Route::get('/setup-security', SetupSecurity::class)
         ->middleware(['auth'])
         ->name('setup.security');
+
+    Route::get('/recovery', \App\Livewire\Auth\BiometricRecovery::class)
+        ->middleware(['auth'])
+        ->name('biometric.recovery');
 
     Route::middleware(['auth', 'security-keys'])->group(function () {
         Route::view('dashboard', 'dashboard')->name('dashboard');
