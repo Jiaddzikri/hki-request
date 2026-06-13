@@ -5,7 +5,7 @@ namespace App\Livewire\Hki\Reviewer;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\HkiProposal;
+use App\Models\HKIProposal;
 use Illuminate\Support\Facades\Gate;
 
 #[Layout('components.layouts.app')]

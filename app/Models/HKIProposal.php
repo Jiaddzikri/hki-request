@@ -22,11 +22,23 @@ class HKIProposal extends Model
         'status',
         'description',
         'url_detail',
+        'is_integrity_locked',
+        'integrity_locked_at',
     ];
 
     protected $casts = [
         'publication_date' => 'date',
+        'is_integrity_locked' => 'boolean',
+        'integrity_locked_at' => 'datetime',
     ];
+
+    /**
+     * Mengembalikan true jika proposal dikunci karena deteksi manipulasi audit log.
+     */
+    public function isIntegrityLocked(): bool
+    {
+        return (bool) $this->is_integrity_locked;
+    }
 
     public function user(): BelongsTo
     {

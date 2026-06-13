@@ -3,7 +3,7 @@
 namespace App\Livewire\Hki\Forensic;
 
 use Livewire\Component;
-use App\Models\HkiProposal;
+use App\Models\HKIProposal;
 use Livewire\Attributes\Layout;
 
 class PublicVerifier extends Component
@@ -18,7 +18,7 @@ class PublicVerifier extends Component
     {
         $this->proposalId = $id;
         
-        $this->proposal = HkiProposal::with(['user', 'auditLogs'])->find($id);
+        $this->proposal = HKIProposal::with(['user', 'auditLogs'])->find($id);
 
         if ($this->proposal && $this->proposal->status === 'APPROVED') {
             $this->isValid = true;

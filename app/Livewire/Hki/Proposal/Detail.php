@@ -200,6 +200,7 @@ class Detail extends Component
                 'payload' => [
                     'decision' => $this->reviewDecision,
                     'notes' => $this->reviewNotes,
+                    'status' => $statusMap[$this->reviewDecision],
                     'reviewer_name' => Auth::user()->name,
                     'timestamp' => now()->format('Y-m-d H:i:s'),
                 ],

@@ -12,7 +12,7 @@ class EnsureHasSecurityKeys
     {
         $user = auth()->user();
         if ($user && ! $user->webAuthnCredentials()->exists()) {
-            if (! $request->routeIs('setup.security')) {
+            if (! $request->routeIs('setup.security') && ! $request->routeIs('biometric.recovery')) {
                 return redirect()->route('setup.security');
             }
         }
