@@ -84,8 +84,37 @@
         </div>
       </div>
 
+      {{-- INTEGRITY LOCK BANNER — Muncul ketika sistem mendeteksi manipulasi audit log --}}
+      @if($proposal->is_integrity_locked)
+        <div class="mb-4 bg-red-900 border-l-4 border-red-500 p-5 rounded-r-lg shadow-md">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 mt-0.5">
+              <svg class="h-6 w-6 text-red-300" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-sm font-bold text-red-200 uppercase tracking-wide">🔒 Akses Diblokir — Manipulasi Data Terdeteksi</h3>
+              <p class="mt-1 text-sm text-red-300">
+                Sistem verifikasi audit log mendeteksi ketidakcocokan pada rantai hash (<strong class="text-red-200">Hash Chain Broken / State Tampered</strong>).
+                Semua aksi pada proposal ini diblokir secara otomatis untuk mencegah kerusakan data lebih lanjut.
+              </p>
+              @if($proposal->integrity_locked_at)
+                <p class="mt-2 text-xs text-red-400">
+                  Dikunci pada: {{ $proposal->integrity_locked_at->format('d F Y, H:i:s') }}
+                </p>
+              @endif
+              <p class="mt-2 text-xs text-red-400 font-semibold">
+                Hubungi Administrator sistem untuk pemeriksaan dan pemulihan integritas data.
+              </p>
+            </div>
+          </div>
+        </div>
+      @endif
+
       {{-- Alert untuk Status Revisi --}}
       @if($proposal->status === 'REVISION' && !$isEditMode)
+
         <div class="mb-4 bg-orange-50 border-l-4 border-orange-400 p-4">
           <div class="flex">
             <div class="flex-shrink-0">

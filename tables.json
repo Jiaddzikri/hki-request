@@ -1,0 +1,3652 @@
+[
+    {
+        "table": "answers",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "auto_recomendations",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "babies",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "failed_jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "uuid",
+                "type": "varchar"
+            },
+            {
+                "name": "connection",
+                "type": "text"
+            },
+            {
+                "name": "queue",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "exception",
+                "type": "longtext"
+            },
+            {
+                "name": "failed_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "followups",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "job_batches",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "total_jobs",
+                "type": "int"
+            },
+            {
+                "name": "pending_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_job_ids",
+                "type": "longtext"
+            },
+            {
+                "name": "options",
+                "type": "mediumtext"
+            },
+            {
+                "name": "cancelled_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            },
+            {
+                "name": "finished_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "notifications",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "option_questions",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "password_reset_tokens",
+        "columns": [
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "permissions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "guard_name",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "personal_access_tokens",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "postpartum_visits",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "questions",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "recomendation_rules",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "recomendation_variations",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "results",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "role_has_permissions",
+        "columns": [
+            {
+                "name": "permission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "role_id",
+                "type": "bigint"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "role_has_permissions_permission_id_foreign",
+                "columns": [
+                    "permission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "permissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "role_has_permissions_role_id_foreign",
+                "columns": [
+                    "role_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "roles",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "roles",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "guard_name",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "sessions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ip_address",
+                "type": "varchar"
+            },
+            {
+                "name": "user_agent",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "last_activity",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "audit_logs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "model_type",
+                "type": "varchar"
+            },
+            {
+                "name": "model_id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "action",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "text"
+            },
+            {
+                "name": "previous_hash",
+                "type": "char"
+            },
+            {
+                "name": "current_hash",
+                "type": "char"
+            },
+            {
+                "name": "digital_signature",
+                "type": "text"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "book_authors",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "book_submission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "role_category",
+                "type": "enum"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn_nip",
+                "type": "varchar"
+            },
+            {
+                "name": "affiliation",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "position",
+                "type": "int"
+            },
+            {
+                "name": "is_corresponding",
+                "type": "tinyint"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "book_authors_book_submission_id_foreign",
+                "columns": [
+                    "book_submission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "book_submissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "book_files",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "book_submission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "type",
+                "type": "varchar"
+            },
+            {
+                "name": "file_path",
+                "type": "varchar"
+            },
+            {
+                "name": "file_name",
+                "type": "varchar"
+            },
+            {
+                "name": "file_size",
+                "type": "int"
+            },
+            {
+                "name": "version",
+                "type": "int"
+            },
+            {
+                "name": "uploaded_by",
+                "type": "bigint"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "book_files_book_submission_id_foreign",
+                "columns": [
+                    "book_submission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "book_submissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "book_files_uploaded_by_foreign",
+                "columns": [
+                    "uploaded_by"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            }
+        ]
+    },
+    {
+        "table": "book_reviews",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "book_submission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "reviewer_id",
+                "type": "bigint"
+            },
+            {
+                "name": "review_notes",
+                "type": "text"
+            },
+            {
+                "name": "review_file_path",
+                "type": "varchar"
+            },
+            {
+                "name": "decision",
+                "type": "varchar"
+            },
+            {
+                "name": "deadline_at",
+                "type": "date"
+            },
+            {
+                "name": "reviewed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "book_reviews_book_submission_id_foreign",
+                "columns": [
+                    "book_submission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "book_submissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "book_reviews_reviewer_id_foreign",
+                "columns": [
+                    "reviewer_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            }
+        ]
+    },
+    {
+        "table": "book_submissions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "title",
+                "type": "varchar"
+            },
+            {
+                "name": "isbn_request_type",
+                "type": "enum"
+            },
+            {
+                "name": "publication_media",
+                "type": "enum"
+            },
+            {
+                "name": "reader_group",
+                "type": "enum"
+            },
+            {
+                "name": "library_type",
+                "type": "enum"
+            },
+            {
+                "name": "library_category",
+                "type": "enum"
+            },
+            {
+                "name": "has_kdt",
+                "type": "tinyint"
+            },
+            {
+                "name": "estimated_publish_month",
+                "type": "varchar"
+            },
+            {
+                "name": "estimated_publish_year",
+                "type": "year"
+            },
+            {
+                "name": "province",
+                "type": "varchar"
+            },
+            {
+                "name": "city",
+                "type": "varchar"
+            },
+            {
+                "name": "distributor",
+                "type": "varchar"
+            },
+            {
+                "name": "description",
+                "type": "text"
+            },
+            {
+                "name": "total_pages",
+                "type": "int"
+            },
+            {
+                "name": "book_height_cm",
+                "type": "decimal"
+            },
+            {
+                "name": "edition",
+                "type": "varchar"
+            },
+            {
+                "name": "series",
+                "type": "varchar"
+            },
+            {
+                "name": "has_illustration",
+                "type": "tinyint"
+            },
+            {
+                "name": "publication_url",
+                "type": "varchar"
+            },
+            {
+                "name": "page_estimation",
+                "type": "int"
+            },
+            {
+                "name": "isbn",
+                "type": "varchar"
+            },
+            {
+                "name": "e_isbn",
+                "type": "varchar"
+            },
+            {
+                "name": "publication_year",
+                "type": "year"
+            },
+            {
+                "name": "similarity_score",
+                "type": "double"
+            },
+            {
+                "name": "status",
+                "type": "varchar"
+            },
+            {
+                "name": "submitted_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "published_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "deleted_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "book_submissions_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "book_trackings",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "book_submission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "status",
+                "type": "varchar"
+            },
+            {
+                "name": "description",
+                "type": "text"
+            },
+            {
+                "name": "actor_id",
+                "type": "bigint"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "book_trackings_actor_id_foreign",
+                "columns": [
+                    "actor_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            },
+            {
+                "name": "book_trackings_book_submission_id_foreign",
+                "columns": [
+                    "book_submission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "book_submissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "failed_jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "uuid",
+                "type": "varchar"
+            },
+            {
+                "name": "connection",
+                "type": "text"
+            },
+            {
+                "name": "queue",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "exception",
+                "type": "longtext"
+            },
+            {
+                "name": "failed_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_audit_logs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "model_type",
+                "type": "text"
+            },
+            {
+                "name": "model_id",
+                "type": "char"
+            },
+            {
+                "name": "action",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "text"
+            },
+            {
+                "name": "previous_hash",
+                "type": "char"
+            },
+            {
+                "name": "current_hash",
+                "type": "char"
+            },
+            {
+                "name": "digital_signature",
+                "type": "text"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_audit_logs_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            }
+        ]
+    },
+    {
+        "table": "hki_proposal_documents",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "hki_proposal_id",
+                "type": "char"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "file_path",
+                "type": "varchar"
+            },
+            {
+                "name": "mime_type",
+                "type": "varchar"
+            },
+            {
+                "name": "file_size",
+                "type": "int"
+            },
+            {
+                "name": "file_hash",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_proposal_documents_hki_proposal_id_foreign",
+                "columns": [
+                    "hki_proposal_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_proposals",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "hki_proposal_members",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "hki_proposal_id",
+                "type": "char"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "role",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "nik",
+                "type": "varchar"
+            },
+            {
+                "name": "npwp",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "detail",
+                "type": "text"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_proposal_members_hki_proposal_id_foreign",
+                "columns": [
+                    "hki_proposal_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_proposals",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "hki_proposal_members_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            }
+        ]
+    },
+    {
+        "table": "hki_proposal_signatures",
+        "columns": [
+            {
+                "name": "id",
+                "type": "char"
+            },
+            {
+                "name": "hki_proposal_id",
+                "type": "char"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "credential_id",
+                "type": "varchar"
+            },
+            {
+                "name": "signature",
+                "type": "text"
+            },
+            {
+                "name": "authenticator_data",
+                "type": "text"
+            },
+            {
+                "name": "client_data_json",
+                "type": "text"
+            },
+            {
+                "name": "signed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_proposal_signatures_hki_proposal_id_foreign",
+                "columns": [
+                    "hki_proposal_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_proposals",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "hki_proposal_signatures_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "hki_proposals",
+        "columns": [
+            {
+                "name": "id",
+                "type": "char"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "hki_type_id",
+                "type": "bigint"
+            },
+            {
+                "name": "title",
+                "type": "varchar"
+            },
+            {
+                "name": "publication_date",
+                "type": "timestamp"
+            },
+            {
+                "name": "publication_country",
+                "type": "varchar"
+            },
+            {
+                "name": "publication_city",
+                "type": "varchar"
+            },
+            {
+                "name": "description",
+                "type": "text"
+            },
+            {
+                "name": "status",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "deleted_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "url_detail",
+                "type": "varchar"
+            },
+            {
+                "name": "rejection_reason",
+                "type": "text"
+            },
+            {
+                "name": "certificate_number",
+                "type": "varchar"
+            },
+            {
+                "name": "certificate_file_path",
+                "type": "varchar"
+            },
+            {
+                "name": "approved_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_proposals_hki_type_id_foreign",
+                "columns": [
+                    "hki_type_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_types",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            },
+            {
+                "name": "hki_proposals_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "no action"
+            }
+        ]
+    },
+    {
+        "table": "hki_reviews",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "hki_proposal_id",
+                "type": "char"
+            },
+            {
+                "name": "reviewer_id",
+                "type": "bigint"
+            },
+            {
+                "name": "review_notes",
+                "type": "text"
+            },
+            {
+                "name": "decision",
+                "type": "enum"
+            },
+            {
+                "name": "reviewed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_reviews_hki_proposal_id_foreign",
+                "columns": [
+                    "hki_proposal_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_proposals",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "hki_reviews_reviewer_id_foreign",
+                "columns": [
+                    "reviewer_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "hki_system_states",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "current_global_hash",
+                "type": "varchar"
+            },
+            {
+                "name": "total_logs",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_types",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "parent_id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "requires_claims",
+                "type": "tinyint"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "hki_types_parent_id_foreign",
+                "columns": [
+                    "parent_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "hki_types",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "set null"
+            }
+        ]
+    },
+    {
+        "table": "job_batches",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "total_jobs",
+                "type": "int"
+            },
+            {
+                "name": "pending_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_job_ids",
+                "type": "longtext"
+            },
+            {
+                "name": "options",
+                "type": "mediumtext"
+            },
+            {
+                "name": "cancelled_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            },
+            {
+                "name": "finished_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "ltr_assignment_members",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "ltr_assignment_request_id",
+                "type": "char"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn_nip_nim",
+                "type": "varchar"
+            },
+            {
+                "name": "faculty",
+                "type": "enum"
+            },
+            {
+                "name": "academic_position",
+                "type": "json"
+            },
+            {
+                "name": "institutions",
+                "type": "json"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "ltr_assignment_members_ltr_assignment_request_id_foreign",
+                "columns": [
+                    "ltr_assignment_request_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "ltr_assignment_requests",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "ltr_assignment_requests",
+        "columns": [
+            {
+                "name": "id",
+                "type": "char"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "assignment_type",
+                "type": "enum"
+            },
+            {
+                "name": "full_name",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            },
+            {
+                "name": "faculty",
+                "type": "enum"
+            },
+            {
+                "name": "academic_positions",
+                "type": "json"
+            },
+            {
+                "name": "start_date",
+                "type": "date"
+            },
+            {
+                "name": "end_date",
+                "type": "date"
+            },
+            {
+                "name": "academic_year",
+                "type": "varchar"
+            },
+            {
+                "name": "institution_name",
+                "type": "varchar"
+            },
+            {
+                "name": "institution_address",
+                "type": "text"
+            },
+            {
+                "name": "research_title",
+                "type": "varchar"
+            },
+            {
+                "name": "estimated_budget",
+                "type": "decimal"
+            },
+            {
+                "name": "leader_name",
+                "type": "varchar"
+            },
+            {
+                "name": "pic_name",
+                "type": "varchar"
+            },
+            {
+                "name": "report_file_path",
+                "type": "varchar"
+            },
+            {
+                "name": "publication_link",
+                "type": "varchar"
+            },
+            {
+                "name": "status",
+                "type": "enum"
+            },
+            {
+                "name": "letter_number",
+                "type": "varchar"
+            },
+            {
+                "name": "submitted_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "reviewed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "deleted_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "ltr_assignment_requests_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "ltr_assignment_reviews",
+        "columns": [
+            {
+                "name": "id",
+                "type": "char"
+            },
+            {
+                "name": "assignment_request_id",
+                "type": "char"
+            },
+            {
+                "name": "reviewer_id",
+                "type": "bigint"
+            },
+            {
+                "name": "decision",
+                "type": "enum"
+            },
+            {
+                "name": "notes",
+                "type": "text"
+            },
+            {
+                "name": "reviewed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "ltr_assignment_reviews_assignment_request_id_foreign",
+                "columns": [
+                    "assignment_request_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "ltr_assignment_requests",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "ltr_assignment_reviews_reviewer_id_foreign",
+                "columns": [
+                    "reviewer_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "ltr_categories",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "category",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "ltr_submissions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ltr_category_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ltr_unit_id",
+                "type": "bigint"
+            },
+            {
+                "name": "description",
+                "type": "text"
+            },
+            {
+                "name": "indicators",
+                "type": "text"
+            },
+            {
+                "name": "budget",
+                "type": "double"
+            },
+            {
+                "name": "planned_start_date",
+                "type": "datetime"
+            },
+            {
+                "name": "planned_end_date",
+                "type": "datetime"
+            },
+            {
+                "name": "url_documentation",
+                "type": "text"
+            },
+            {
+                "name": "status",
+                "type": "enum"
+            },
+            {
+                "name": "reviewer_id",
+                "type": "bigint"
+            },
+            {
+                "name": "review_notes",
+                "type": "text"
+            },
+            {
+                "name": "reviewed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "ltr_submissions_ltr_category_id_foreign",
+                "columns": [
+                    "ltr_category_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "ltr_categories",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "set null"
+            },
+            {
+                "name": "ltr_submissions_ltr_unit_id_foreign",
+                "columns": [
+                    "ltr_unit_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "ltr_units",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "set null"
+            },
+            {
+                "name": "ltr_submissions_reviewer_id_foreign",
+                "columns": [
+                    "reviewer_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "set null"
+            },
+            {
+                "name": "ltr_submissions_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "ltr_units",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "unit",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "model_has_permissions",
+        "columns": [
+            {
+                "name": "permission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "model_type",
+                "type": "varchar"
+            },
+            {
+                "name": "model_id",
+                "type": "bigint"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "model_has_permissions_permission_id_foreign",
+                "columns": [
+                    "permission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "permissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "model_has_roles",
+        "columns": [
+            {
+                "name": "role_id",
+                "type": "bigint"
+            },
+            {
+                "name": "model_type",
+                "type": "varchar"
+            },
+            {
+                "name": "model_id",
+                "type": "bigint"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "model_has_roles_role_id_foreign",
+                "columns": [
+                    "role_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "roles",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "password_reset_tokens",
+        "columns": [
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "permissions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "guard_name",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "role_has_permissions",
+        "columns": [
+            {
+                "name": "permission_id",
+                "type": "bigint"
+            },
+            {
+                "name": "role_id",
+                "type": "bigint"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "role_has_permissions_permission_id_foreign",
+                "columns": [
+                    "permission_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "permissions",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            },
+            {
+                "name": "role_has_permissions_role_id_foreign",
+                "columns": [
+                    "role_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "roles",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "roles",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "guard_name",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "sessions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ip_address",
+                "type": "varchar"
+            },
+            {
+                "name": "user_agent",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "last_activity",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "user_master_secrets",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "secret_hash",
+                "type": "varchar"
+            },
+            {
+                "name": "institutional_share",
+                "type": "text"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "user_master_secrets_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "user_recovery_codes",
+        "columns": [
+            {
+                "name": "id",
+                "type": "char"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "code_hash",
+                "type": "varchar"
+            },
+            {
+                "name": "used_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "user_recovery_codes_user_id_foreign",
+                "columns": [
+                    "user_id"
+                ],
+                "foreign_schema": "hki_db",
+                "foreign_table": "users",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "webauthn_credentials",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "authenticatable_type",
+                "type": "varchar"
+            },
+            {
+                "name": "authenticatable_id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "char"
+            },
+            {
+                "name": "alias",
+                "type": "varchar"
+            },
+            {
+                "name": "counter",
+                "type": "bigint"
+            },
+            {
+                "name": "rp_id",
+                "type": "varchar"
+            },
+            {
+                "name": "origin",
+                "type": "varchar"
+            },
+            {
+                "name": "transports",
+                "type": "json"
+            },
+            {
+                "name": "aaguid",
+                "type": "char"
+            },
+            {
+                "name": "public_key",
+                "type": "text"
+            },
+            {
+                "name": "public_key_checksum",
+                "type": "varchar"
+            },
+            {
+                "name": "attestation_format",
+                "type": "varchar"
+            },
+            {
+                "name": "certificates",
+                "type": "json"
+            },
+            {
+                "name": "disabled_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "akun_perkiraan",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "anggota",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "audit_logs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "model_type",
+                "type": "varchar"
+            },
+            {
+                "name": "model_id",
+                "type": "bigint"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "action",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "text"
+            },
+            {
+                "name": "previous_hash",
+                "type": "char"
+            },
+            {
+                "name": "current_hash",
+                "type": "char"
+            },
+            {
+                "name": "digital_signature",
+                "type": "text"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jurnal",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "jurnal_detail",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "kredit",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "kredit_pengajuan",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "kredit_transaksi",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "password_reset_tokens",
+        "columns": [
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "pengaturan",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "sessions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ip_address",
+                "type": "varchar"
+            },
+            {
+                "name": "user_agent",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "last_activity",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "simpanan_transaksi",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "tabungan",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "tabungan_transaksi",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "tenants",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "buyers",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "categories",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "discount_usage_histories",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "discounts",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "failed_jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "uuid",
+                "type": "varchar"
+            },
+            {
+                "name": "connection",
+                "type": "text"
+            },
+            {
+                "name": "queue",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "exception",
+                "type": "longtext"
+            },
+            {
+                "name": "failed_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "item_records",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "items",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "job_batches",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "total_jobs",
+                "type": "int"
+            },
+            {
+                "name": "pending_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_job_ids",
+                "type": "longtext"
+            },
+            {
+                "name": "options",
+                "type": "mediumtext"
+            },
+            {
+                "name": "cancelled_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            },
+            {
+                "name": "finished_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "order_items",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "orders",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "password_reset_tokens",
+        "columns": [
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "sales_transaction_details",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "sales_transactions",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "sessions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ip_address",
+                "type": "varchar"
+            },
+            {
+                "name": "user_agent",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "last_activity",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "tenants",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "variant_items",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "failed_jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "uuid",
+                "type": "varchar"
+            },
+            {
+                "name": "connection",
+                "type": "text"
+            },
+            {
+                "name": "queue",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "exception",
+                "type": "longtext"
+            },
+            {
+                "name": "failed_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_categories",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_creators",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_request_documents",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "hki_requests",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "job_batches",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "total_jobs",
+                "type": "int"
+            },
+            {
+                "name": "pending_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_job_ids",
+                "type": "longtext"
+            },
+            {
+                "name": "options",
+                "type": "mediumtext"
+            },
+            {
+                "name": "cancelled_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            },
+            {
+                "name": "finished_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "roles",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "guard_name",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "user_roles",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "balance_transactions",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "value",
+                "type": "mediumtext"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "cache_locks",
+        "columns": [
+            {
+                "name": "key",
+                "type": "varchar"
+            },
+            {
+                "name": "owner",
+                "type": "varchar"
+            },
+            {
+                "name": "expiration",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "event_participants",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "events",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "failed_jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "uuid",
+                "type": "varchar"
+            },
+            {
+                "name": "connection",
+                "type": "text"
+            },
+            {
+                "name": "queue",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "exception",
+                "type": "longtext"
+            },
+            {
+                "name": "failed_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "job_batches",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "total_jobs",
+                "type": "int"
+            },
+            {
+                "name": "pending_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_jobs",
+                "type": "int"
+            },
+            {
+                "name": "failed_job_ids",
+                "type": "longtext"
+            },
+            {
+                "name": "options",
+                "type": "mediumtext"
+            },
+            {
+                "name": "cancelled_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            },
+            {
+                "name": "finished_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "jobs",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "queue",
+                "type": "varchar"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "attempts",
+                "type": "tinyint"
+            },
+            {
+                "name": "reserved_at",
+                "type": "int"
+            },
+            {
+                "name": "available_at",
+                "type": "int"
+            },
+            {
+                "name": "created_at",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "migrations",
+        "columns": [
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "migration",
+                "type": "varchar"
+            },
+            {
+                "name": "batch",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "password_reset_tokens",
+        "columns": [
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "payments",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "sessions",
+        "columns": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "user_id",
+                "type": "bigint"
+            },
+            {
+                "name": "ip_address",
+                "type": "varchar"
+            },
+            {
+                "name": "user_agent",
+                "type": "text"
+            },
+            {
+                "name": "payload",
+                "type": "longtext"
+            },
+            {
+                "name": "last_activity",
+                "type": "int"
+            }
+        ],
+        "foreign_keys": []
+    },
+    {
+        "table": "tenant_user",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "tenants",
+        "columns": [],
+        "foreign_keys": []
+    },
+    {
+        "table": "users",
+        "columns": [
+            {
+                "name": "id",
+                "type": "bigint"
+            },
+            {
+                "name": "name",
+                "type": "varchar"
+            },
+            {
+                "name": "email",
+                "type": "varchar"
+            },
+            {
+                "name": "email_verified_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "password",
+                "type": "varchar"
+            },
+            {
+                "name": "two_factor_secret",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_recovery_codes",
+                "type": "text"
+            },
+            {
+                "name": "two_factor_confirmed_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "remember_token",
+                "type": "varchar"
+            },
+            {
+                "name": "created_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "updated_at",
+                "type": "timestamp"
+            },
+            {
+                "name": "google_id",
+                "type": "varchar"
+            },
+            {
+                "name": "avatar",
+                "type": "varchar"
+            },
+            {
+                "name": "nidn",
+                "type": "varchar"
+            }
+        ],
+        "foreign_keys": []
+    }
+]

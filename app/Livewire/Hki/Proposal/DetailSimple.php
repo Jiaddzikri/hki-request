@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Hki\Proposal;
 
-use App\Models\HkiProposal;
+use App\Models\HKIProposal;
 use App\Models\HKIType;
 use App\Services\HKI\AuditLogService;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +104,14 @@ class DetailSimple extends Component
 
     public function initiateSaveRevision()
     {
+        $proposal = HKIProposal::findOrFail($this->proposalId);
+
+        if ($proposal->isIntegrityLocked()) {
+            session()->flash('error', 'AKSES DIBLOKIR: Proposal ini dikunci oleh sistem karena terdeteksi manipulasi pada rantai audit log. Hubungi Administrator.');
+
+            return;
+        }
+
         $this->validate([
             'title' => 'required|string|max:500',
             'hki_type_id' => 'required|exists:hki_types,id',
@@ -187,6 +195,14 @@ class DetailSimple extends Component
     {
         if (! Gate::allows('review-hki')) {
             session()->flash('error', 'Anda tidak memiliki akses sebagai Reviewer.');
+
+            return;
+        }
+
+        $proposal = HKIProposal::findOrFail($this->proposalId);
+
+        if ($proposal->isIntegrityLocked()) {
+            session()->flash('error', 'AKSES DIBLOKIR: Proposal ini dikunci oleh sistem karena terdeteksi manipulasi pada rantai audit log. Hubungi Administrator.');
 
             return;
         }
