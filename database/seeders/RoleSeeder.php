@@ -31,10 +31,10 @@ class RoleSeeder extends Seeder
         $roleAdmin = Role::create(['name' => 'super-admin']);
         $roleAdmin->givePermissionTo(Permission::all());
 
-        $myUser = User::where('email', '220660121093@student.unsap.ac.id')->first();
-        if ($myUser) {
-            $myUser->assignRole('super-admin');
-            $myUser->assignRole('reviewer');
-        }
+        // $myUser = User::where('email', '220660121093@student.unsap.ac.id')->first();
+        // if ($myUser) {
+        //     $myUser->assignRole('super-admin');
+        //     $myUser->assignRole('reviewer');
+        // }
     }
 }

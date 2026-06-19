@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['role:super-admin', 'security-keys'])->group(function () {
         Route::get('/admin/users', \App\Livewire\Admin\UserManagement::class)->name('admin.users');
+        Route::get('/admin/users/{user}/recovery', \App\Livewire\Admin\UserRecovery::class)->name('admin.users.recovery');
         Route::get('/admin/roles', \App\Livewire\Admin\RoleManagement::class)->name('admin.roles');
     });
 

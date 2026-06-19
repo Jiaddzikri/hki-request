@@ -144,6 +144,9 @@
                                     <span>Ubah Role</span>
                                 </div>
                             </th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Aksi SSS
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -195,6 +198,14 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                    <a href="{{ route('admin.users.recovery', $user->id) }}" class="inline-flex items-center px-3 py-1.5 bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 hover:text-red-900 rounded-md transition-colors text-xs font-semibold shadow-sm">
+                                        <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                        </svg>
+                                        Pemulihan SSS
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
