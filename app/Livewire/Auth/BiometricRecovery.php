@@ -47,8 +47,8 @@ class BiometricRecovery extends Component
 
         DB::beginTransaction();
         try {
-            // Delete all biometric credentials to reset access
-            $user->webAuthnCredentials()->delete();
+            // REVOKE (Disable) old biometric credentials to preserve historical signatures (Forward Secrecy)
+            $user->webAuthnCredentials()->update(['disabled_at' => now()]);
 
             // Delete the master secret to prevent reuse (they will generate a new one during setup)
             $masterSecret->delete();

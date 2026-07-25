@@ -3,6 +3,7 @@
 namespace App\Livewire\Hki\Proposal;
 
 use App\Models\HKIProposal;
+use App\Events\AuditLogRequested;
 use App\Services\HKI\AuditLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -129,17 +130,16 @@ class Detail extends Component
             // Update status back to SUBMITTED
             $proposal->update(['status' => 'SUBMITTED']);
 
-            // Create audit log using service for global chaining
-            app(AuditLogService::class)->logActivityGlobal([
-                'model_type' => HKIProposal::class,
-                'model_id' => $proposal->id,
-                'user_id' => Auth::id(),
-                'action' => 'RESUBMIT_PROPOSAL',
-                'payload' => [
+            // Create audit log using global event
+            AuditLogRequested::dispatch(
+                HKIProposal::class,
+                $proposal->id,
+                'RESUBMIT_PROPOSAL',
+                [
                     'message' => 'Proposal direvisi dan diajukan kembali',
                     'timestamp' => now()->format('Y-m-d H:i:s'),
-                ],
-            ]);
+                ]
+            );
 
             $this->isEditMode = false;
 
@@ -191,20 +191,19 @@ class Detail extends Component
                 'status' => $statusMap[$this->reviewDecision],
             ]);
 
-            // Create audit log using service for global chaining
-            app(AuditLogService::class)->logActivityGlobal([
-                'model_type' => HKIProposal::class,
-                'model_id' => $proposal->id,
-                'user_id' => Auth::id(),
-                'action' => strtoupper($this->reviewDecision).'_PROPOSAL',
-                'payload' => [
+            // Create audit log using global event
+            AuditLogRequested::dispatch(
+                HKIProposal::class,
+                $proposal->id,
+                strtoupper($this->reviewDecision).'_PROPOSAL',
+                [
                     'decision' => $this->reviewDecision,
                     'notes' => $this->reviewNotes,
                     'status' => $statusMap[$this->reviewDecision],
                     'reviewer_name' => Auth::user()->name,
                     'timestamp' => now()->format('Y-m-d H:i:s'),
-                ],
-            ]);
+                ]
+            );
 
             $this->showReviewModal = false;
             $this->reset(['reviewDecision', 'reviewNotes']);

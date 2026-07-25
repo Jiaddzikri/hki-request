@@ -15,6 +15,13 @@ class AuditLogService
   public function logActivityGlobal(array $data)
   {
     return DB::transaction(function () use ($data) {
+      // 0. Pessimistic Locking (Serialization) on Global State to prevent Race Conditions
+      HkiSystemState::firstOrCreate(
+        ['key' => 'global_audit_state'],
+        ['current_global_hash' => str_repeat('0', 64), 'total_logs' => 0]
+      );
+      $systemState = HkiSystemState::where('key', 'global_audit_state')->lockForUpdate()->first();
+
       // 1. Get the latest log for this SPECIFIC entity to maintain its isolated chain
       $lastLog = HKIAuditLog::where('model_type', $data['model_type'])
         ->where('model_id', $data['model_id'])
@@ -72,10 +79,7 @@ class AuditLogService
       ]);
 
       // 5. Update Global State Pointer (to detect complete truncation)
-      $systemState = HkiSystemState::firstOrCreate(
-        ['key' => 'global_audit_state'],
-        ['current_global_hash' => str_repeat('0', 64), 'total_logs' => 0]
-      );
+      // $systemState was already fetched and locked at the start of the transaction.
 
       $newGlobalHash = hash('sha256', $systemState->current_global_hash . $currentHash);
 
@@ -94,6 +98,19 @@ class AuditLogService
    */
   public function verifyChain(string|int|null $modelId = null, ?string $modelType = \App\Models\HKIProposal::class): array
   {
+    $isProduction = app()->environment('production');
+    $isFeatureEnabled = config('hki.features.immutable_logging');
+
+    if (!$isProduction && !$isFeatureEnabled) {
+        return [
+          'is_valid' => false,
+          'errors' => [['id' => 0, 'action' => 'SYSTEM', 'error' => 'FORENSICS_DISABLED']],
+          'status' => 'FORENSICS_DISABLED',
+          'total_logs' => 0,
+          'verified_at' => now()->format('Y-m-d H:i:s'),
+        ];
+    }
+
     $query = HKIAuditLog::orderBy('id', 'asc');
 
     if ($modelId) {

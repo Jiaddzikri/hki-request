@@ -14,8 +14,7 @@
         </div>
 
         <!-- Load Secrets.js for Shamir's Secret Sharing -->
-
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
         <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700 p-6">
             @if(!$registered)
                 <div class="space-y-6">
@@ -73,8 +72,10 @@
 
                         <div>
                             <span class="text-[10px] font-bold text-red-800">2. KUNCI FAKULTAS/TI (Cetak dan berikan ke Admin TI secara fisik):</span>
-                            <div class="mt-1 p-2 bg-white dark:bg-zinc-900 border border-red-300 rounded">
-                                <code id="physical-share-display" class="text-xs font-mono break-all text-red-600">Memproses...</code>
+                            <div class="mt-1 p-2 bg-white dark:bg-zinc-900 border border-red-300 rounded flex flex-col items-center">
+                                <code id="physical-share-display" class="text-xs font-mono break-all text-red-600 w-full mb-3">Memproses...</code>
+                                <div id="physical-qr" class="bg-white p-2 rounded border border-gray-200"></div>
+                                <button onclick="window.print()" class="mt-3 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700">Cetak Kode QR</button>
                             </div>
                         </div>
                         
@@ -193,7 +194,19 @@
                                     const userShareEl = document.getElementById('user-share-display');
                                     const physicalShareEl = document.getElementById('physical-share-display');
                                     if(userShareEl) userShareEl.innerText = userShare;
-                                    if(physicalShareEl) physicalShareEl.innerText = physicalShare;
+                                    if(physicalShareEl) {
+                                        physicalShareEl.innerText = physicalShare;
+                                        // Generate QR Code untuk Kunci Fakultas
+                                        document.getElementById('physical-qr').innerHTML = '';
+                                        new QRCode(document.getElementById("physical-qr"), {
+                                            text: physicalShare,
+                                            width: 150,
+                                            height: 150,
+                                            colorDark : "#000000",
+                                            colorLight : "#ffffff",
+                                            correctLevel : QRCode.CorrectLevel.H
+                                        });
+                                    }
                                 }, 500);
                             });
                         })

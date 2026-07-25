@@ -4,6 +4,7 @@ namespace App\Livewire\Hki\Proposal;
 
 use App\Models\HKIProposal;
 use App\Models\HKIType;
+use App\Events\AuditLogRequested;
 use App\Services\HKI\AuditLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,7 +134,7 @@ class DetailSimple extends Component
         $this->dispatch('webauthn-sign-revision', options: $options);
     }
 
-    public function submitRevisionWithSignature($assertion, AuditLogService $auditLogService)
+    public function submitRevisionWithSignature($assertion)
     {
         DB::beginTransaction();
         try {
@@ -166,20 +167,19 @@ class DetailSimple extends Component
                 'signed_at' => now(),
             ]);
 
-            // Create audit log using service for global chaining
-            $auditLogService->logActivityGlobal([
-                'model_type' => HKIProposal::class,
-                'model_id' => $proposal->id,
-                'user_id' => auth()->id(),
-                'action' => 'Proposal direvisi dan diajukan ulang',
-                'payload' => [
+            // Create audit log using global event
+            AuditLogRequested::dispatch(
+                HKIProposal::class,
+                $proposal->id,
+                'Proposal direvisi dan diajukan ulang',
+                [
                     'title' => $this->title,
                     'hki_type_id' => $this->hki_type_id,
                     'status' => 'SUBMITTED',
                     'auth_id' => $assertion['id'],
                 ],
-                'digital_signature' => $assertion['response']['signature'],
-            ]);
+                $assertion['response']['signature']
+            );
 
             DB::commit();
             $this->isEditMode = false;
@@ -236,7 +236,7 @@ class DetailSimple extends Component
         $this->dispatch('webauthn-sign-review', options: $options);
     }
 
-    public function submitReviewWithSignature($assertion, AuditLogService $auditLogService)
+    public function submitReviewWithSignature($assertion)
     {
         DB::beginTransaction();
         try {
@@ -279,20 +279,19 @@ class DetailSimple extends Component
                 'signed_at' => now(),
             ]);
 
-            // Create audit log using service for global chaining
-            $auditLogService->logActivityGlobal([
-                'model_type' => HKIProposal::class,
-                'model_id' => $proposal->id,
-                'user_id' => Auth::id(),
-                'action' => 'Review: '.strtoupper($this->reviewDecision),
-                'payload' => [
+            // Create audit log using global event
+            AuditLogRequested::dispatch(
+                HKIProposal::class,
+                $proposal->id,
+                'Review: '.strtoupper($this->reviewDecision),
+                [
                     'decision' => $this->reviewDecision,
                     'review_notes' => $this->reviewNotes,
                     'status' => $statusMap[$this->reviewDecision],
                     'auth_id' => $assertion['id'],
                 ],
-                'digital_signature' => $assertion['response']['signature'],
-            ]);
+                $assertion['response']['signature']
+            );
 
             DB::commit();
             $this->showReviewModal = false;
