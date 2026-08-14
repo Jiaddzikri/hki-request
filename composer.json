@@ -21,7 +21,8 @@
         "livewire/volt": "^1.7.0",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.23",
-        "tallstackui/tallstackui": "^2.0.0"
+        "tallstackui/tallstackui": "^2.0.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

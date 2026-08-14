@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Hki\CertificateController;
+
 use App\Livewire\Auth\SetupSecurity;
 use App\Livewire\Hki\Forensic\PublicVerifier;
 use App\Livewire\Hki\Proposal\Lists;
@@ -8,6 +9,7 @@ use App\Livewire\Letter\Create;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +98,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{id}', \App\Livewire\Book\Detail::class)->name('book.detail');
     });
 
+});
+
+use App\Jobs\ProcessImmutableLog as JobsProcessImmutableLog;
+use App\Models\User;
+
+Route::get('/test-queue', function () {
+    $user = User::firstOrCreate(
+        ['id' => 1],
+        [
+            'name' => 'System Tester',
+            'email' => 'tester@hkiaudit.local',
+            'password' => bcrypt('password123'),
+            'email_verified_at' => now(),
+        ]
+    );
+
+    $dummyData = [
+        'user_id' => 1,
+        'model_type' => 'App\Models\HkiProposal',
+        'model_id' => rand(100, 999),
+        'action' => 'APPROVED',
+        'payload' => ['status' => 'approved', 'notes' => 'Diuji via RabbitMQ'],
+        'digital_signature' => Str::random(64)
+    ];
+
+    JobsProcessImmutableLog::dispatch($dummyData);
+
+    return "Tembakan berhasil. Cek log Worker Anda!";
 });
 
 require __DIR__.'/auth.php';
